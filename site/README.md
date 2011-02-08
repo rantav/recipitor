@@ -12,7 +12,7 @@ Versions Used:
  Java HotSpot(TM) 64-Bit Server VM (build 17.1-b03-307, mixed mode)
 
 Getting Started
-u==============
+===============
 1. Install JRuby (see http://javaevangelist.blogspot.com/2010/09/jruby-and-rails-3.html)
 2. jruby -S bundle install
 3. jruby -S rake db:create
