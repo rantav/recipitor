@@ -23,7 +23,7 @@ import com.google.inject.Singleton;
 /**
  * @author ymaman
  * created: Feb 11, 2011
- * Associated Bugs: 
+ * Associated Bugs: 9761993 
  */
 @Singleton
 public class MailHandlerServlet extends HttpServlet {
