@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+<!--	
+  <cron>
+    <url>/ping</url>
+    <description>verify serice is alive</description>
+    <schedule>every 1 minutes</schedule>
+  </cron>
+-->  
+</cronentries>

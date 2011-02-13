@@ -1,0 +1,161 @@
+From MAILER-DAEMON  Fri Feb 11 17:52:18 2011
+Return-Path: <>
+X-Original-To: ymaman@ymaman-ubuntu
+Delivered-To: ymaman@ymaman-ubuntu
+Received: by ymaman-ubuntu (Postfix)
+	id 349E22A6FFF; Fri, 11 Feb 2011 17:52:18 +0200 (IST)
+Date: Fri, 11 Feb 2011 17:52:18 +0200 (IST)
+From: MAILER-DAEMON@ymaman-ubuntu (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: ymaman@ymaman-ubuntu
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="6C8D72A6FFE.1297439538/ymaman-ubuntu"
+Message-Id: <20110211155218.349E22A6FFF@ymaman-ubuntu>
+X-IMAPbase: 1297439856 6
+Status: O
+X-UID: 3
+
+This is a MIME-encapsulated message.
+
+--6C8D72A6FFE.1297439538/ymaman-ubuntu
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host ymaman-ubuntu.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<yonatanm@gmail.com>: host gmail-smtp-in.l.google.com[74.125.77.27] said:
+    550-5.7.1 [79.176.10.36] The IP you're using to send mail is not authorized
+    to 550-5.7.1 send email directly to our servers. Please use the SMTP relay
+    at your 550-5.7.1 service provider instead. Learn more at
+    550 5.7.1 http://mail.google.com/support/bin/answer.py?answer=10336
+    v45si2130101eeh.40 (in reply to end of DATA command)
+
+--6C8D72A6FFE.1297439538/ymaman-ubuntu
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; ymaman-ubuntu
+X-Postfix-Queue-ID: 6C8D72A6FFE
+X-Postfix-Sender: rfc822; ymaman@ymaman-ubuntu
+Arrival-Date: Fri, 11 Feb 2011 17:52:15 +0200 (IST)
+
+Final-Recipient: rfc822; yonatanm@gmail.com
+Action: failed
+Status: 5.7.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.7.1 [79.176.10.36] The IP you're using to send
+    mail is not authorized to 550-5.7.1 send email directly to our servers.
+    Please use the SMTP relay at your 550-5.7.1 service provider instead. Learn
+    more at                          550 5.7.1
+    http://mail.google.com/support/bin/answer.py?answer=10336
+    v45si2130101eeh.40
+
+--6C8D72A6FFE.1297439538/ymaman-ubuntu
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Return-Path: <ymaman@ymaman-ubuntu>
+Received: by ymaman-ubuntu (Postfix, from userid 1000)
+	id 6C8D72A6FFE; Fri, 11 Feb 2011 17:52:15 +0200 (IST)
+To: <yonatanm@gmail.com>
+X-Mailer: mail (GNU Mailutils 2.1)
+Message-Id: <20110211155216.6C8D72A6FFE@ymaman-ubuntu>
+Date: Fri, 11 Feb 2011 17:52:15 +0200 (IST)
+From: ymaman@ymaman-ubuntu (Yonatan)
+
+hello wolrd
+
+--6C8D72A6FFE.1297439538/ymaman-ubuntu--
+
+From MAILER-DAEMON  Fri Feb 11 17:57:19 2011
+Return-Path: <>
+X-Original-To: ymaman@ymaman-ubuntu
+Delivered-To: ymaman@ymaman-ubuntu
+Received: by ymaman-ubuntu (Postfix)
+	id E6BFA2A6FB7; Fri, 11 Feb 2011 17:57:19 +0200 (IST)
+Date: Fri, 11 Feb 2011 17:57:19 +0200 (IST)
+From: MAILER-DAEMON@ymaman-ubuntu (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: ymaman@ymaman-ubuntu
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="134DD2A3E9D.1297439839/ymaman-ubuntu"
+Message-Id: <20110211155719.E6BFA2A6FB7@ymaman-ubuntu>
+Status: O
+X-UID: 5
+
+This is a MIME-encapsulated message.
+
+--134DD2A3E9D.1297439839/ymaman-ubuntu
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host ymaman-ubuntu.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<yonatanm@gmail.com>: host gmail-smtp-in.l.google.com[74.125.77.27] said:
+    550-5.7.1 [79.176.10.36] The IP you're using to send mail is not authorized
+    to 550-5.7.1 send email directly to our servers. Please use the SMTP relay
+    at your 550-5.7.1 service provider instead. Learn more at
+    550 5.7.1 http://mail.google.com/support/bin/answer.py?answer=10336
+    p10si2132096eeh.74 (in reply to end of DATA command)
+
+--134DD2A3E9D.1297439839/ymaman-ubuntu
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; ymaman-ubuntu
+X-Postfix-Queue-ID: 134DD2A3E9D
+X-Postfix-Sender: rfc822; ymaman@ymaman-ubuntu
+Arrival-Date: Fri, 11 Feb 2011 17:57:18 +0200 (IST)
+
+Final-Recipient: rfc822; yonatanm@gmail.com
+Action: failed
+Status: 5.7.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.7.1 [79.176.10.36] The IP you're using to send
+    mail is not authorized to 550-5.7.1 send email directly to our servers.
+    Please use the SMTP relay at your 550-5.7.1 service provider instead. Learn
+    more at                          550 5.7.1
+    http://mail.google.com/support/bin/answer.py?answer=10336
+    p10si2132096eeh.74
+
+--134DD2A3E9D.1297439839/ymaman-ubuntu
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Return-Path: <ymaman@ymaman-ubuntu>
+Received: by ymaman-ubuntu (Postfix, from userid 1000)
+	id 134DD2A3E9D; Fri, 11 Feb 2011 17:57:18 +0200 (IST)
+To: <yonatanm@gmail.com>
+X-Mailer: mail (GNU Mailutils 2.1)
+Message-Id: <20110211155718.134DD2A3E9D@ymaman-ubuntu>
+Date: Fri, 11 Feb 2011 17:57:18 +0200 (IST)
+From: ymaman@ymaman-ubuntu (Yonatan)
+
+hello wolrd
+
+--134DD2A3E9D.1297439839/ymaman-ubuntu--
+
