@@ -9,8 +9,17 @@
  */
 package com.recipitor.datain;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,18 +41,28 @@ public class TaskHandlerServlet extends HttpServlet {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(TaskHandlerServlet.class);
 	private IMailDAO mailDAO;
+	final static String lineEnd = "\r\n";
+	final static String twoHyphens = "--";
+	final static String boundary = "---------------------------42669085015852166671501441328";
 
 	@Override
 	public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 		final String id = req.getParameter("id");
 		if (LGR.isInfoEnabled()) LGR.info("Task Handler will handle ID [" + id + "]");
-		handle(id);
+		try {
+			handle(id);
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * @param id
+	 * @throws MalformedURLException 
+	 * @throws MessagingException 
 	 */
-	private void handle(final String id) {
+	private void handle(final String id) throws Exception {
 		final Mail m = mailDAO.getMail(Long.parseLong(id));
 		if (!m.getIsActive()) {
 			LGR.error("mail [" + id + "] was supposed to be active...");
@@ -56,9 +75,84 @@ public class TaskHandlerServlet extends HttpServlet {
 
 	/**
 	 * @param m
+	 * @throws MessagingException 
+	 * @throws MalformedURLException 
 	 */
-	private void postMailToFrontEnd(final Mail m) {
+	private void postMailToFrontEnd(final Mail m) throws Exception {
 		if (LGR.isDebugEnabled()) LGR.debug("posting mail [" + m.getId() + "] to frontend ");
+		final URL url = new URL("http://0.0.0.0:13000/emails");
+		final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		//		conn.setDoInput(true);
+		//		conn.setDoOutput(true);
+		//		conn.setUseCaches(false);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		conn.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
+		conn.setRequestProperty("Accept-Encoding", "gzip,deflate");
+		conn.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+		conn.setRequestProperty("Keep-Alive", "115");
+		conn.setRequestProperty("Connection", "keep-alive");
+		//		conn.setRequestProperty("Referer", "http://0.0.0.0:13000/receipts/new");
+		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+		final DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+		final InputStream is = TaskHandlerServlet.class.getClassLoader().getResourceAsStream("img.png");
+		final ByteArrayOutputStream bo = new ByteArrayOutputStream();
+		final byte[] buff = new byte[1024];
+		while (true) {
+			final int len = is.read(buff);
+			if (len < 0) break;
+			bo.write(buff, 0, len);
+		}
+		is.close();
+		addPart("utf8", "V", dos);
+		//		addPart("authenticity_token", "J5X6jZ5RvzipqTa+6XS27Q06vPrfSoG14W10Y9yO8Ok=", dos);
+		addPart("receipt[description]", "this is my receipt", dos);
+		//		addPart("commit", "commit", dos);
+		addPartFile("receipt[img]", "kuku.png", bo.toByteArray(), dos);
+		addFooter(dos);
+		dos.flush();
+		dos.close();
+		final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String decodedString;
+		final StringBuilder sb = new StringBuilder();
+		while ((decodedString = in.readLine()) != null)
+			sb.append(decodedString);
+		if (LGR.isDebugEnabled()) LGR.debug(sb);
+		in.close();
+	}
+
+	/**
+	 * @param m
+	 * @param dos
+	 * @throws IOException
+	 */
+	private void addPartFile(final String n, final String fn, final byte[] content, final DataOutputStream dos)
+			throws IOException {
+		dos.writeBytes(twoHyphens + boundary + lineEnd);
+		dos.writeBytes("Content-Disposition: form-data; name=\"" + n + "\";" + " filename=\"" + fn + "\"" + lineEnd);
+		dos.writeBytes("Content-Type: image/png");
+		dos.writeBytes(lineEnd);
+		dos.writeBytes(lineEnd);
+		dos.write(content);
+		dos.writeBytes(lineEnd);
+	}
+
+	private void addPart(final String n, final String val, final DataOutputStream dos) throws IOException {
+		dos.writeBytes(twoHyphens + boundary + lineEnd);
+		dos.writeBytes("Content-Disposition: form-data; name=\"" + n + "\"" + lineEnd);
+		dos.writeBytes(lineEnd);
+		dos.writeBytes(val);
+		dos.writeBytes(lineEnd);
+	}
+
+	/**
+	 * @param dos
+	 * @throws IOException
+	 */
+	private void addFooter(final DataOutputStream dos) throws IOException {
+		dos.writeBytes(lineEnd);
+		dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 	}
 
 	@Inject
