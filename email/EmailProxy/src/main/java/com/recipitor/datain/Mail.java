@@ -45,12 +45,14 @@ public class Mail implements Serializable {
 	@Persistent
 	private Blob attachment;
 	@Persistent
+	private String fileName;
+	@Persistent
 	private String messageID;
 	@Persistent
 	private Boolean isActive = true;
 
 	public Mail(final String fv, final String cs, final Date dv, final String mv, final Blob av, final String midV,
-			final Boolean iaV) {
+			final Boolean iaV, final String vFn) {
 		super();
 		from = fv;
 		subject = cs;
@@ -59,6 +61,7 @@ public class Mail implements Serializable {
 		attachment = av;
 		messageID = midV;
 		isActive = iaV;
+		fileName = vFn;
 	}
 
 	public Date getSentDate() {
@@ -128,6 +131,14 @@ public class Mail implements Serializable {
 		isActive = v;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(final String v) {
+		fileName = v;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -139,6 +150,7 @@ public class Mail implements Serializable {
 		sb.append("sentDate[" + sentDate + "] ");
 		sb.append("mimeType [" + mimeType + "] ");
 		sb.append("hasAttachment [" + (attachment != null) + "]");
+		sb.append("fileName [" + fileName + "]");
 		return sb.toString();
 	}
 }

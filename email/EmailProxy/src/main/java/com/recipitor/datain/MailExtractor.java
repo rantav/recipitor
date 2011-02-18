@@ -11,6 +11,8 @@ package com.recipitor.datain;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -30,6 +32,8 @@ public class MailExtractor implements IMailExtractor {
 
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(MailExtractor.class);
+	final static Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile("([A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4})",
+			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * @see com.recipitor.datain.IMailExtractor#extract(javax.mail.internet.MimeMessage)
@@ -40,7 +44,7 @@ public class MailExtractor implements IMailExtractor {
 		mail.setIsActive(true);
 		final String from = message.getFrom() != null && message.getFrom().length > 0 ? message.getFrom()[0].toString()
 				: "";
-		mail.setFrom(from);
+		mail.setFrom(extractSender(from));
 		mail.setMessageID(message.getMessageID());
 		mail.setSentDate(message.getSentDate());
 		mail.setSubject(message.getSubject());
@@ -84,6 +88,7 @@ public class MailExtractor implements IMailExtractor {
 	//	}
 	private void handleAttachment(final Mail m, final BodyPart bp) throws IOException, MessagingException {
 		LGR.info("handling attachment ");
+		m.setFileName(bp.getFileName());
 		final InputStream is = (InputStream) bp.getContent();
 		m.setMimeType(bp.getContentType());
 		final String contentType = bp.getContentType();
@@ -102,5 +107,15 @@ public class MailExtractor implements IMailExtractor {
 			bos.write(buff, 0, len);
 		}
 		return bos.toByteArray();
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	public String extractSender(final String a) {
+		final Matcher m = EMAIL_ADDRESS_PATTERN.matcher(a);
+		m.find();
+		return m.groupCount() > 0 ? m.group(1) : "";
 	}
 }

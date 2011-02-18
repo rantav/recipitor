@@ -41,6 +41,8 @@ public class TaskHandlerServlet extends HttpServlet {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(TaskHandlerServlet.class);
 	private IMailDAO mailDAO;
+	private static String DEV_URL = "http://0.0.0.0:3000/emails";
+	private String url = DEV_URL;
 	final static String lineEnd = "\r\n";
 	final static String twoHyphens = "--";
 	final static String boundary = "---------------------------42669085015852166671501441328";
@@ -80,12 +82,8 @@ public class TaskHandlerServlet extends HttpServlet {
 	 */
 	private void postMailToFrontEnd(final Mail m) throws Exception {
 		if (LGR.isDebugEnabled()) LGR.debug("posting mail [" + m.getId() + "] to frontend ");
-		final URL url = new URL("http://0.0.0.0:13000/emails");
-		final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 		conn.setDoOutput(true);
-		//		conn.setDoInput(true);
-		//		conn.setDoOutput(true);
-		//		conn.setUseCaches(false);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		conn.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
@@ -93,7 +91,6 @@ public class TaskHandlerServlet extends HttpServlet {
 		conn.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		conn.setRequestProperty("Keep-Alive", "115");
 		conn.setRequestProperty("Connection", "keep-alive");
-		//		conn.setRequestProperty("Referer", "http://0.0.0.0:13000/receipts/new");
 		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 		final DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
 		final InputStream is = TaskHandlerServlet.class.getClassLoader().getResourceAsStream("img.png");
@@ -106,10 +103,10 @@ public class TaskHandlerServlet extends HttpServlet {
 		}
 		is.close();
 		addPart("utf8", "V", dos);
-		//		addPart("authenticity_token", "J5X6jZ5RvzipqTa+6XS27Q06vPrfSoG14W10Y9yO8Ok=", dos);
-		addPart("receipt[description]", "this is my receipt", dos);
-		//		addPart("commit", "commit", dos);
-		addPartFile("receipt[img]", "kuku.png", bo.toByteArray(), dos);
+		addPart("receipt[description]", m.getSubject(), dos);
+		addPart("user_email", m.getFrom(), dos);
+		final byte[] b = m.getAttachment() == null ? bo.toByteArray() : m.getAttachment().getBytes();
+		addPartFile(m.getFileName(), m.getMimeType(), b, dos);
 		addFooter(dos);
 		dos.flush();
 		dos.close();
@@ -127,11 +124,12 @@ public class TaskHandlerServlet extends HttpServlet {
 	 * @param dos
 	 * @throws IOException
 	 */
-	private void addPartFile(final String n, final String fn, final byte[] content, final DataOutputStream dos)
+	private void addPartFile(final String fn, final String mimetype, final byte[] content, final DataOutputStream dos)
 			throws IOException {
 		dos.writeBytes(twoHyphens + boundary + lineEnd);
-		dos.writeBytes("Content-Disposition: form-data; name=\"" + n + "\";" + " filename=\"" + fn + "\"" + lineEnd);
-		dos.writeBytes("Content-Type: image/png");
+		dos.writeBytes("Content-Disposition: form-data; name=\"receipt[img]\";" + " filename=\""
+				+ (fn == null ? "myFile.jpg" : fn) + "\"" + lineEnd);
+		dos.writeBytes("Content-Type: " + (mimetype == null ? "image/png" : mimetype));
 		dos.writeBytes(lineEnd);
 		dos.writeBytes(lineEnd);
 		dos.write(content);
@@ -158,5 +156,9 @@ public class TaskHandlerServlet extends HttpServlet {
 	@Inject
 	public void setEmailDAO(final IMailDAO v) {
 		mailDAO = v;
+	}
+
+	public void setUrl(final String v) {
+		url = v;
 	}
 }
