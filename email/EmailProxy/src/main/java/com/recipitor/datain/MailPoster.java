@@ -48,7 +48,7 @@ public class MailPoster implements IMailPoster {
 	 */
 	@Override
 	public boolean postMail(final Mail m) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("posting mail [" + m.getId() + "] to frontend ");
+		if (LGR.isDebugEnabled()) LGR.debug("posting mail [" + m.getId() + "] to frontend [" + url + "]");
 		final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");

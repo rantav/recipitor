@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -30,6 +31,15 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(MyGuiceServletContextListener.class);
+	public static boolean isDev = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
+
+	/** 
+	 * 
+	 * @return either "dev" or "production" based on the runtime platfrom
+	 */
+	public static String getEnv() {
+		return MyGuiceServletContextListener.isDev ? "dev" : "production";
+	}
 
 	@Override
 	protected Injector getInjector() {
@@ -39,7 +49,8 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
 				final Properties conf = new Properties();
 				{
-					conf.load(ServletModule.class.getResourceAsStream("/conf.properties"));
+					conf.load(ServletModule.class.getResourceAsStream("/com/recipitor/datain/conf/"
+							+ MyGuiceServletContextListener.getEnv() + "/conf.properties"));
 				}
 
 				@Override
