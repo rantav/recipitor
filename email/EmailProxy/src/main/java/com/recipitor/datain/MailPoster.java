@@ -33,16 +33,16 @@ public class MailPoster implements IMailPoster {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(MailPoster.class);
 	private final String url;
-	private String secret = "no_secret";
+	private String apikey = "no_secret";
 	final static String lineEnd = "\r\n";
 	final static String twoHyphens = "--";
 	String boundary = "---------------------------42669085015852166671501441328";
 
 	@Inject
-	public MailPoster(@Named("frontend.url") final String u, @Named("frontend.apikey") final String s,
+	public MailPoster(@Named("frontend.url") final String u, @Named("frontend.apikey") final String a,
 			@Named("boundary") final String b) {
 		url = u;
-		secret = s;
+		apikey = a;
 		boundary = b;
 	}
 
@@ -76,7 +76,7 @@ public class MailPoster implements IMailPoster {
 		addPart("utf8", "V", dos);
 		addPart("receipt[description]", m.getSubject(), dos);
 		addPart("user_email", m.getFrom(), dos);
-		addPart("secret", secret, dos);
+		addPart("apikey", apikey, dos);
 		final byte[] b = m.getAttachment() == null ? bo.toByteArray() : m.getAttachment().getBytes();
 		addPartFile(m.getFileName(), m.getMimeType(), b, dos);
 		addFooter(dos);
