@@ -10,6 +10,7 @@
 package com.recipitor.datain;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -21,5 +22,5 @@ import javax.mail.internet.MimeMessage;
  */
 public interface IMailExtractor {
 
-	public Mail extract(MimeMessage message) throws MessagingException, IOException;
+	public List<Mail> extract(MimeMessage message) throws MessagingException, IOException;
 }

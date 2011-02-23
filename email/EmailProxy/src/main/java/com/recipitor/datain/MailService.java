@@ -49,16 +49,21 @@ public class MailService implements IMailService {
 			if (LGR.isDebugEnabled()) LGR.debug("onNewMail");
 			final MimeMessage message = new MimeMessage(Session.getDefaultInstance(new Properties(), null),
 					req.getInputStream());
-			final Mail em = mailExtractor.extract(message);
-			if (em.getAttachment() == null)
-				LGR.warn("could not identified an attachment..., will not save it. throwing exception");
-			//				throw new RuntimeException(
-			//						"could not find an attachment. hope it will cause GAE to return a mail back to the user...");
-			mailDAO.addMail(em);
-			putInQueue(em);
+			final List<Mail> ems = mailExtractor.extract(message);
+			sotreAndQue(ems);
 		} catch (final MessagingException e) {
 			LGR.error("got error [" + e.getMessage() + "]", e);
 			return;
+		}
+	}
+
+	/**
+	 * @param ems
+	 */
+	private void sotreAndQue(final List<Mail> ems) {
+		for (final Mail m : ems) {
+			mailDAO.addMail(m);
+			putInQueue(m);
 		}
 	}
 
