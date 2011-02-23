@@ -94,9 +94,15 @@ public class MailPoster implements IMailPoster {
 	 */
 	private void addPartFile(final String fn, final String mimetype, final byte[] content, final DataOutputStream dos)
 			throws IOException {
+		LGR.info("adding a new file to the post request with name [" + fn + "]");
+		//goPhoto.2011.2.21-23_0_19.jpg
+		String f = fn.replaceAll("\\.", "_");
+		final int i = f.lastIndexOf('_');
+		if (i >= 1) f = f.substring(0, i) + "." + f.substring(i + 1);
+		LGR.info("@@@ new file to the post request with name [" + f + "]");
 		dos.writeBytes(twoHyphens + boundary + lineEnd);
 		dos.writeBytes("Content-Disposition: form-data; name=\"receipt[img]\";" + " filename=\""
-				+ (fn == null ? "myFile.jpg" : fn) + "\"" + lineEnd);
+				+ (f == null ? "myFile.jpg" : f) + "\"" + lineEnd);
 		dos.writeBytes("Content-Type: " + (mimetype == null ? "image/png" : mimetype));
 		dos.writeBytes(lineEnd);
 		dos.writeBytes(lineEnd);
