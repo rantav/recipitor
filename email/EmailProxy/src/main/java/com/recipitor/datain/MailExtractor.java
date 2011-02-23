@@ -132,17 +132,13 @@ public class MailExtractor implements IMailExtractor {
 		return $;
 	}
 
-	//	private void handleMessage() {
-	//		LGR.info("handling message");
+	//	private ReceiptData handleAttachment(final BodyPart bp) throws IOException, MessagingException {
+	//		LGR.info("handling attachment ");
+	//		final InputStream is = (InputStream) bp.getContent();
+	//		final byte[] data = toByteArray(is);
+	//		final ReceiptData $ = buildReceiptData(bp, data);
+	//		return $;
 	//	}
-	private ReceiptData handleAttachment(final BodyPart bp) throws IOException, MessagingException {
-		LGR.info("handling attachment ");
-		final InputStream is = (InputStream) bp.getContent();
-		final byte[] data = toByteArray(is);
-		final ReceiptData $ = buildReceiptData(bp, data);
-		return $;
-	}
-
 	/**
 	 * @param bp
 	 * @param data
