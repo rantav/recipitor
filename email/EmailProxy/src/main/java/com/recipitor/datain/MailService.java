@@ -10,6 +10,7 @@
 package com.recipitor.datain;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -50,6 +51,18 @@ public class MailService implements IMailService {
 			final MimeMessage message = new MimeMessage(Session.getDefaultInstance(new Properties(), null),
 					req.getInputStream());
 			final List<Mail> ems = mailExtractor.extract(message);
+			if (MyGuiceServletContextListener.isDev && ems.isEmpty()) {
+				LGR.debug("in debug mode, send a receipt with default for user [yonatanm@gmail.com]");
+				final Mail m = new Mail();
+				m.setFrom("yonatanm@gmail.com");
+				m.setMessageID("123");
+				m.setSentDate(new Date());
+				m.setSubject("subject");
+				m.setAttachment(null);
+				m.setMimeType(null);
+				m.setFileName(null);
+				ems.add(m);
+			}
 			sotreAndQue(ems);
 		} catch (final MessagingException e) {
 			LGR.error("got error [" + e.getMessage() + "]", e);
