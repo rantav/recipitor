@@ -9,7 +9,7 @@
  */
 package com.recipitor.textextractor;
 
-import java.io.BufferedReader;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -29,7 +29,7 @@ public class ProcessExecutorTest {
 	@Test
 	public void test() throws Exception {
 		final ProcessExecutor $ = new ProcessExecutor();
-		final BufferedReader br = $.run("/bin/echo", "hello world!");
-		Assert.assertEquals("hello world!", br.readLine());
+		final List<String> l = Commons.loadListFromInputStream($.run("/bin/echo", "hello world!"));
+		Assert.assertEquals("hello world!", l.get(0));
 	}
 }
