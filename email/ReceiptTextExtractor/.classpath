@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/Binaries/libs/typica.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/httpclient-4.1.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/httpclient-cache-4.1.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/httpcore-4.1.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/httpmime-4.1.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/guice-3.0-rc2.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/javax.inject.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/aopalliance.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
