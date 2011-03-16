@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="/Binaries/libs/guice-3.0-rc2.jar"/>
 	<classpathentry kind="lib" path="/Binaries/libs/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/Binaries/libs/aopalliance.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jackson-core-asl-1.6.4.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jackson-mapper-asl-1.6.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

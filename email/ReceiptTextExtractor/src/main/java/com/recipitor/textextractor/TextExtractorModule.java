@@ -51,5 +51,7 @@ public class TextExtractorModule extends AbstractModule {
 	protected void configure() {
 		Names.bindProperties(binder(), conf);
 		bind(QueueService.class).to(RecipitorQueueService.class);
+		bind(IReceiptHandler.class).to(ReceiptHandler.class);
+		//		bind(ProcessExecutor.class).to(ProcessExecutor.class);
 	}
 }

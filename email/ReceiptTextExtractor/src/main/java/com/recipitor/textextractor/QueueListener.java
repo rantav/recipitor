@@ -18,6 +18,16 @@ public class QueueListener {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
 	QueueService queueService;
+	IReceiptHandler receiptHandler;
+
+	/**
+	 * @param rh the receiptHandler to set
+	 */
+	@Inject
+	public void setReceiptHandler(final IReceiptHandler rh) {
+		receiptHandler = rh;
+	}
+
 	private String queueName;
 
 	/**
@@ -51,6 +61,7 @@ public class QueueListener {
 					continue;
 				}
 				LGR.info("msg [" + msg.getMessageId() + "]");
+				receiptHandler.handle(msg);
 			}
 		} catch (final Exception ex) {
 			LGR.error("EXCEPTION, queue : " + queueName, ex);
