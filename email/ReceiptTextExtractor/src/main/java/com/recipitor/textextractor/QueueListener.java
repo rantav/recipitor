@@ -1,6 +1,7 @@
 package com.recipitor.textextractor;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -19,6 +20,14 @@ public class QueueListener {
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
 	QueueService queueService;
 	IReceiptHandler receiptHandler;
+	ObjectMapper mapper;
+
+	/**
+	 * @param m the mapper to set
+	 */
+	public void setMapper(final ObjectMapper m) {
+		mapper = m;
+	}
 
 	/**
 	 * @param rh the receiptHandler to set
@@ -61,7 +70,8 @@ public class QueueListener {
 					continue;
 				}
 				LGR.info("msg [" + msg.getMessageId() + "]");
-				receiptHandler.handle(msg);
+				final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
+				receiptHandler.handle(b);
 			}
 		} catch (final Exception ex) {
 			LGR.error("EXCEPTION, queue : " + queueName, ex);

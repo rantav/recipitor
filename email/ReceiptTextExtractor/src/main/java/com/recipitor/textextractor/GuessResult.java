@@ -1,5 +1,5 @@
 /**
- * NAME: IReceiptHandler.java
+ * NAME: GuessResult.java
  * 
  * DESCRIPTION: 
  *		
@@ -8,18 +8,16 @@
  * 
  */
 package com.recipitor.textextractor;
+import org.apache.log4j.Logger;
 
 
 /**
  * @author ymaman
- * created: Mar 16, 2011
+ * created: Mar 17, 2011
  * Associated Bugs: 
  */
-public interface IReceiptHandler {
+public class GuessResult {
 
-	/**
-	 * @param b
-	 * @throws Exception 
-	 */
-	void handle(Body b) throws Exception;
+	@SuppressWarnings("unused")
+	private static Logger LGR = Logger.getLogger(GuessResult.class);
 }

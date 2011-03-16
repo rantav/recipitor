@@ -12,6 +12,7 @@ package com.recipitor.textextractor;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 /**
@@ -27,7 +28,14 @@ public class ReceiptHandlerTest extends TestCase {
 	@Test
 	public void test() throws Exception {
 		final ReceiptHandler $ = new ReceiptHandler();
-		$.setProcessExecutor(new ProcessExecutor());
-		$.handle(null);
+		final OCRExtractor oe = new Cuneiform();
+		oe.setProcessExecutor(new ProcessExecutor());
+		final ObjectMapper om = new ObjectMapper();
+		final Body b = om
+				.readValue(
+						"{\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\", \"receipt\":{\"id\":\"987\"}}",
+						Body.class);
+		$.setOcrExtractor(oe);
+		$.handle(b);
 	}
 }

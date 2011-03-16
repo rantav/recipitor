@@ -52,6 +52,7 @@ public class TextExtractorModule extends AbstractModule {
 		Names.bindProperties(binder(), conf);
 		bind(QueueService.class).to(RecipitorQueueService.class);
 		bind(IReceiptHandler.class).to(ReceiptHandler.class);
+		bind(OCRExtractor.class).to(Cuneiform.class);
 		//		bind(ProcessExecutor.class).to(ProcessExecutor.class);
 	}
 }

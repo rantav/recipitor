@@ -1,5 +1,5 @@
 /**
- * NAME: IReceiptHandler.java
+ * NAME: IBrandNameGuesser.java
  * 
  * DESCRIPTION: 
  *		
@@ -9,17 +9,12 @@
  */
 package com.recipitor.textextractor;
 
-
 /**
  * @author ymaman
- * created: Mar 16, 2011
+ * created: Mar 17, 2011
  * Associated Bugs: 
  */
-public interface IReceiptHandler {
+public interface IBrandNameGuesser {
 
-	/**
-	 * @param b
-	 * @throws Exception 
-	 */
-	void handle(Body b) throws Exception;
+	GuessResult guess(final ExtractedTokens et);
 }

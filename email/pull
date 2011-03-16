@@ -1,0 +1,5 @@
+#!/bin/sh
+set -u # don't allow uninitialized variables
+set -e # exit on any error
+
+git pull --rebase origin master 

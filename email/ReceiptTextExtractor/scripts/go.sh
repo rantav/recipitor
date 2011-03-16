@@ -1,6 +1,6 @@
 #! /bin/sh
 # usage: go.sh messageID, url
-OUT_TXT_FILE=/tmp/$1
+OUT_TXT_FILE=/tmp/$1.txt
 IMG_FILE=/tmp/$1-img.png
 URL=$2
 wget -O - $URL > $IMG_FILE

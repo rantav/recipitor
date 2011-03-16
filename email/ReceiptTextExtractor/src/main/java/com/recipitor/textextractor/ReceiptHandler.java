@@ -9,13 +9,9 @@
  */
 package com.recipitor.textextractor;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.inject.Inject;
-import com.xerox.amazonws.sqs2.Message;
 
 /**
  * @author ymaman
@@ -26,22 +22,14 @@ public class ReceiptHandler implements IReceiptHandler {
 
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(ReceiptHandler.class);
-	ProcessExecutor processExecutor;
-	ObjectMapper mapper;
+	OCRExtractor ocrExtractor;
 
 	/**
-	 * 
-	 */
-	public ReceiptHandler() {
-		mapper = new ObjectMapper();
-	}
-
-	/**
-	 * @param pe the processExecutor to set
+	 * @param oe the ocerExtractor to set
 	 */
 	@Inject
-	public void setProcessExecutor(final ProcessExecutor pe) {
-		processExecutor = pe;
+	public void setOcrExtractor(final OCRExtractor oe) {
+		ocrExtractor = oe;
 	}
 
 	/**
@@ -49,16 +37,12 @@ public class ReceiptHandler implements IReceiptHandler {
 	 * @see com.recipitor.textextractor.IReceiptHandler#handle(com.xerox.amazonws.sqs2.Message)
 	 */
 	@Override
-	public void handle(final Message msg) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("handling \n" + msg);
-		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
-		final List<String> br = processExecutor.runAndGetResltsAsList("scripts/go.sh", msg.getMessageId(), b.getUrl()
-		//						"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg"
-		//				"http://oi44.tinypic.com/f087y9.jpg");
-				);
+	public void handle(final Body b) throws Exception {
+		if (LGR.isDebugEnabled()) LGR.debug("handling \n" + b);
+		final ExtractedTokens et = ocrExtractor.extract(b);
 		final StringBuilder sb = new StringBuilder();
-		for (final String l : br)
+		for (final String l : et.tokens)
 			sb.append(l + "\n");
-		if (LGR.isDebugEnabled()) LGR.debug("\n" + sb.toString());
+		if (LGR.isDebugEnabled()) LGR.debug("tokens\n" + sb);
 	}
 }
