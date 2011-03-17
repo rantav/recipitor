@@ -9,6 +9,7 @@
  */
 package com.recipitor.textextractor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,10 +22,10 @@ import org.apache.log4j.Logger;
 public class ExtractedTokens {
 
 	/**
-	 * @param tokens the tokens to set
+	 * @param t the tokens to set
 	 */
-	public void setTokens(final List<String> tokens) {
-		this.tokens = tokens;
+	public void setTokens(final List<String> t) {
+		tokens = t;
 	}
 
 	/**
@@ -34,7 +35,15 @@ public class ExtractedTokens {
 		return tokens;
 	}
 
+	public void addTokens(final String t) {
+		tokens.add(t);
+	}
+
+	public void addTokens(final List<String> t) {
+		tokens.addAll(t);
+	}
+
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(ExtractedTokens.class);
-	List<String> tokens;
+	List<String> tokens = new LinkedList<String>();
 }

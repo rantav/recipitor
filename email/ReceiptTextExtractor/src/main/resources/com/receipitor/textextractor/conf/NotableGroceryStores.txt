@@ -4,23 +4,22 @@ Ahold
 Albertsons LLC
 ALDI
 Asda
-Big B Grocery[8]
+Big B Grocery
 Big Y World Class Market
 Bi-Lo
 Brookshire Grocery Company
 Bruno's
 Coles Supermarkets
 Costco
-Coop (Italy)
-Co-op (Atlantic)
-Co-op (Canada)[9]
+Coop
+Co-op
 Copps
 Cub Foods
 Cumberland Farms
 Delhaize
 Dominick's
 Dorothy Lane Market
-Esselunga (Italy)
+Esselunga
 Extra Foods
 Fairway Market
 Fairway Markets
@@ -61,7 +60,7 @@ Metro
 Mercadona
 Morrisons
 Nakumatt
-Nandan Megashop (Bangladesh)
+Nandan Megashop
 Pathmark
 Pick 'N Save
 Piggly Wiggly
@@ -82,11 +81,11 @@ Schnucks
 Shaws
 Shoppers Food & Pharmacy
 Shoprite
-SM Megamall (Philippines)
+SM Megamall
 Smith's Food and Drug
 Sobeys
 Somerfield
-Soriana (Mexico)
+Soriana
 Spartan
 Stater Bros.
 Stewart's Shops
@@ -109,5 +108,5 @@ Whole Foods Market
 WinCo
 Winn-Dixie
 Woodman's Food Market
-Woolworths supermarkets (Australia)
-Indian Opus (Grocery Store) (Australia)
+Woolworths supermarkets
+Indian Opus

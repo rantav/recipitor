@@ -12,6 +12,7 @@ package com.recipitor.textextractor;
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.recipitor.textextractor.data.request.Body;
 
 /**
  * @author ymaman

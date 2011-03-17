@@ -53,6 +53,8 @@ public class TextExtractorModule extends AbstractModule {
 		bind(QueueService.class).to(RecipitorQueueService.class);
 		bind(IReceiptHandler.class).to(ReceiptHandler.class);
 		bind(OCRExtractor.class).to(Cuneiform.class);
+		bind(IBrandNameGuesser.class).to(BrandNameGuesser.class);
+		bind(IFuzzyMatcher.class).to(AGrepMatcher.class);
 		//		bind(ProcessExecutor.class).to(ProcessExecutor.class);
 	}
 }

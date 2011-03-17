@@ -53,4 +53,23 @@ public class Commons {
 	public static List<String> loadListFromResourceName(final String rn) throws Exception {
 		return loadListFromInputStream(loadInputStreamFromSourceName(rn));
 	}
+
+	/**
+	 * @param run
+	 * @return
+	 * @throws Exception 
+	 */
+	public static String loadStringFromInputStream(final InputStream is) throws Exception {
+		final StringBuilder $ = new StringBuilder();
+		boolean ft = true;
+		final BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		while (true) {
+			final String l = br.readLine();
+			if (l == null) break;
+			if (!ft) $.append("\n");
+			$.append(l);
+			ft = false;
+		}
+		return $.toString();
+	}
 }

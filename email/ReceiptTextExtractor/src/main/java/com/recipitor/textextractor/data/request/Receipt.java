@@ -7,7 +7,7 @@
  * ---------------------------------------------------------------------------------
  * 
  */
-package com.recipitor.textextractor;
+package com.recipitor.textextractor.data.request;
 
 import org.apache.log4j.Logger;
 
@@ -30,6 +30,21 @@ public class Receipt {
 	String img_file_name;
 	String description;
 	String img_content_type;
+	String url;
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param u the url to set
+	 */
+	public void setUrl(final String u) {
+		this.url = u;
+	}
 
 	public Receipt() {
 		// must have an empty constructor
@@ -43,10 +58,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param img_updated_at the img_updated_at to set
+	 * @param v the img_updated_at to set
 	 */
-	public void setImg_updated_at(final String img_updated_at) {
-		this.img_updated_at = img_updated_at;
+	public void setImg_updated_at(final String v) {
+		this.img_updated_at = v;
 	}
 
 	/**
@@ -57,10 +72,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param img_file_size the img_file_size to set
+	 * @param v the img_file_size to set
 	 */
-	public void setImg_file_size(final Long img_file_size) {
-		this.img_file_size = img_file_size;
+	public void setImg_file_size(final Long v) {
+		this.img_file_size = v;
 	}
 
 	/**
@@ -71,10 +86,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param extracted_store_name the extracted_store_name to set
+	 * @param v the extracted_store_name to set
 	 */
-	public void setExtracted_store_name(final String extracted_store_name) {
-		this.extracted_store_name = extracted_store_name;
+	public void setExtracted_store_name(final String v) {
+		this.extracted_store_name = v;
 	}
 
 	/**
@@ -85,10 +100,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param created_at the created_at to set
+	 * @param v the created_at to set
 	 */
-	public void setCreated_at(final String created_at) {
-		this.created_at = created_at;
+	public void setCreated_at(final String v) {
+		this.created_at = v;
 	}
 
 	/**
@@ -99,10 +114,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param updated_at the updated_at to set
+	 * @param v the updated_at to set
 	 */
-	public void setUpdated_at(final String updated_at) {
-		this.updated_at = updated_at;
+	public void setUpdated_at(final String v) {
+		this.updated_at = v;
 	}
 
 	/**
@@ -113,10 +128,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param v the id to set
 	 */
-	public void setId(final String id) {
-		this.id = id;
+	public void setId(final String v) {
+		this.id = v;
 	}
 
 	/**
@@ -127,10 +142,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param user_id the user_id to set
+	 * @param v the user_id to set
 	 */
-	public void setUser_id(final String user_id) {
-		this.user_id = user_id;
+	public void setUser_id(final String v) {
+		this.user_id = v;
 	}
 
 	/**
@@ -141,10 +156,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param img_file_name the img_file_name to set
+	 * @param v the img_file_name to set
 	 */
-	public void setImg_file_name(final String img_file_name) {
-		this.img_file_name = img_file_name;
+	public void setImg_file_name(final String v) {
+		this.img_file_name = v;
 	}
 
 	/**
@@ -155,10 +170,10 @@ public class Receipt {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param v the description to set
 	 */
-	public void setDescription(final String description) {
-		this.description = description;
+	public void setDescription(final String v) {
+		this.description = v;
 	}
 
 	/**
@@ -169,9 +184,9 @@ public class Receipt {
 	}
 
 	/**
-	 * @param img_content_type the img_content_type to set
+	 * @param v the img_content_type to set
 	 */
-	public void setImg_content_type(final String img_content_type) {
-		this.img_content_type = img_content_type;
+	public void setImg_content_type(final String v) {
+		this.img_content_type = v;
 	}
 }

@@ -11,7 +11,6 @@ package com.recipitor.textextractor;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -32,7 +31,8 @@ public class ProcessExecutor {
 		return new BufferedInputStream(p.getInputStream());
 	}
 
-	public List<String> runAndGetResltsAsList(final String... args) throws Exception {
-		return Commons.loadListFromInputStream(run(args));
+	public String runAndGetResltsAsString(final String... args) throws Exception {
+		//		return Commons.loadListFromInputStream(run(args));
+		return Commons.loadStringFromInputStream(run(args));
 	}
 }

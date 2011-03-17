@@ -15,6 +15,11 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.recipitor.textextractor.data.request.Body;
+
 /**
  * @author ymaman
  * created: Mar 17, 2011
@@ -27,15 +32,22 @@ public class ReceiptHandlerTest extends TestCase {
 
 	@Test
 	public void test() throws Exception {
-		final ReceiptHandler $ = new ReceiptHandler();
-		final OCRExtractor oe = new Cuneiform();
-		oe.setProcessExecutor(new ProcessExecutor());
+		final Injector injector = Guice.createInjector(new AbstractModule() {
+
+			@Override
+			protected void configure() {
+				bind(IReceiptHandler.class).to(ReceiptHandler.class);
+				bind(OCRExtractor.class).to(Cuneiform.class);
+				bind(IBrandNameGuesser.class).to(BrandNameGuesser.class);
+				bind(IFuzzyMatcher.class).to(AGrepMatcher.class);
+			}
+		});
+		final ReceiptHandler $ = injector.getInstance(ReceiptHandler.class);
 		final ObjectMapper om = new ObjectMapper();
 		final Body b = om
 				.readValue(
 						"{\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\", \"receipt\":{\"id\":\"987\"}}",
 						Body.class);
-		$.setOcrExtractor(oe);
 		$.handle(b);
 	}
 }

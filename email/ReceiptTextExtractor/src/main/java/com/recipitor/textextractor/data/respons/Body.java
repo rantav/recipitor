@@ -7,7 +7,7 @@
  * ---------------------------------------------------------------------------------
  * 
  */
-package com.recipitor.textextractor;
+package com.recipitor.textextractor.data.respons;
 
 import org.apache.log4j.Logger;
 
@@ -20,25 +20,10 @@ public class Body {
 
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(Body.class);
-	String url;
 	Receipt receipt;
 
 	public Body() {
 		// must have an empty constructor
-	}
-
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(final String url) {
-		this.url = url;
 	}
 
 	/**
@@ -49,9 +34,9 @@ public class Body {
 	}
 
 	/**
-	 * @param receipt the receipt to set
+	 * @param r the receipt to set
 	 */
-	public void setReceipt(final Receipt receipt) {
-		this.receipt = receipt;
+	public void setReceipt(final Receipt r) {
+		this.receipt = r;
 	}
 }

@@ -9,9 +9,9 @@
  */
 package com.recipitor.textextractor;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
+
+import com.recipitor.textextractor.data.request.Body;
 
 /**
  * @author ymaman
@@ -25,12 +25,13 @@ public class Cuneiform extends OCRExtractor {
 
 	@Override
 	public ExtractedTokens extract(final Body b) throws Exception {
-		final List<String> tkns = processExecutor.runAndGetResltsAsList("scripts/go.sh", b.getReceipt().id, b.getUrl()
+		final String tkns = processExecutor.runAndGetResltsAsString("scripts/go.sh", b.getReceipt().id, b.getReceipt()
+				.getUrl()
 		//						"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg"
 		//				"http://oi44.tinypic.com/f087y9.jpg");
 				);
 		final ExtractedTokens $ = new ExtractedTokens();
-		$.setTokens(tkns);
+		$.addTokens(tkns);
 		return $;
 	}
 }

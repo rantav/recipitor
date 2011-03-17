@@ -1,5 +1,5 @@
 /**
- * NAME: GuessResult.java
+ * NAME: IFuzzyMatcher.java
  * 
  * DESCRIPTION: 
  *		
@@ -9,17 +9,12 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author ymaman
  * created: Mar 17, 2011
  * Associated Bugs: 
  */
-public class GuessResult {
+public interface IFuzzyMatcher {
 
-	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(GuessResult.class);
-	public String storeName;
-	public Double distance;
+	Double isExist(String term, String tokens) throws Exception;
 }

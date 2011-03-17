@@ -9,6 +9,8 @@
  */
 package com.recipitor.textextractor;
 
+import java.util.List;
+
 /**
  * @author ymaman
  * created: Mar 17, 2011
@@ -16,5 +18,5 @@ package com.recipitor.textextractor;
  */
 public interface IBrandNameGuesser {
 
-	GuessResult guess(final ExtractedTokens et);
+	List<GuessResult> guess(final ExtractedTokens et) throws Exception;
 }
