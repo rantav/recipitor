@@ -7,7 +7,7 @@
  * ---------------------------------------------------------------------------------
  * 
  */
-package com.recipitor.textextractor.data.respons;
+package com.recipitor.textextractor.data.response;
 
 import org.apache.log4j.Logger;
 
