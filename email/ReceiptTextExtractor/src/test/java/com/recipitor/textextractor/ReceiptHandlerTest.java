@@ -46,7 +46,7 @@ public class ReceiptHandlerTest extends TestCase {
 		final ObjectMapper om = new ObjectMapper();
 		final Body b = om
 				.readValue(
-						"{\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\", \"receipt\":{\"id\":\"987\"}}",
+						"{\"receipt\":{\"id\":\"987\",\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\"}}",
 						Body.class);
 		$.handle(b);
 	}
