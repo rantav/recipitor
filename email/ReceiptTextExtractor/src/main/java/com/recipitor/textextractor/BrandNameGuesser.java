@@ -43,7 +43,7 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	 * 
 	 */
 	public BrandNameGuesser() throws Exception {
-		groceryStores = Commons.loadListFromResourceName("/com/receipitor/textextractor/conf/NotableGroceryStores.txt");
+		groceryStores = Commons.loadListFromResourceName("/com/recipitor/textextractor/conf/NotableGroceryStores.txt");
 	}
 
 	/**

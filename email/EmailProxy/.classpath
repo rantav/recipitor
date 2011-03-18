@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-io-7.0.2.v20100331.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

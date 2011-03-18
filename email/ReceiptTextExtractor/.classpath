@@ -19,5 +19,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/Binaries/libs/jackson-core-asl-1.6.4.jar"/>
 	<classpathentry kind="lib" path="/Binaries/libs/jackson-mapper-asl-1.6.4.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-server-7.0.2.v20100331.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-util-7.0.2.v20100331.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-http-7.0.2.v20100331.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-io-7.0.2.v20100331.jar"/>
+	<classpathentry kind="lib" path="/Binaries/libs/jetty-continuation-7.0.2.v20100331.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
