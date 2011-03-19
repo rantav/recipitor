@@ -41,6 +41,7 @@ public class TextExtractorModule extends AbstractModule {
 	}
 
 	public TextExtractorModule() throws IOException {
+		if (LGR.isInfoEnabled()) LGR.info("detetcing environment as [" + getEnv() + "]");
 		final InputStream resourceAsStream = Main.class.getResourceAsStream("/com/recipitor/textextractor/conf/"
 				+ getEnv() + "/recipitor.aws.properties");
 		if (LGR.isDebugEnabled()) LGR.debug("getEnv is " + getEnv());
