@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
 
 apply plugin:com.smokejumperit.gradle.AllPlugins
 apply plugin:com.smokejumperit.gradle.OneJarPlugin
@@ -32,7 +33,6 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: '1.2.16'
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
-    compile group: 'org.eclipse.jetty', name: 'jetty-distribution', version: '7.3.1.v20110307'
     compile group: 'com.google.collections', name: 'google-collections', version: '1.0'
 	compile group: 'commons-threadpool', name: 'commons-threadpool', version: '20030513.073905'
     

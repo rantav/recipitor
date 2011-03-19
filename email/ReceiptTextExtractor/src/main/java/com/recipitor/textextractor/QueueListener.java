@@ -1,17 +1,10 @@
 package com.recipitor.textextractor;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -26,8 +19,9 @@ import com.xerox.amazonws.sqs2.QueueService;
  * the value of the queuename parameter. If successful, it deletes the message from the queue.
  * On error, it retries a number of times.
  */
-public class QueueListener extends AbstractHandler {
+public class QueueListener {
 
+	//	extends AbstractHandler {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
 	QueueService queueService;
@@ -147,18 +141,5 @@ public class QueueListener extends AbstractHandler {
 		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @see org.eclipse.jetty.server.Handler#handle(java.lang.String, org.eclipse.jetty.server.Request, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException, ServletException {
-		response.setContentType("text/html;charset=utf-8");
-		response.setStatus(HttpServletResponse.SC_OK);
-		baseRequest.setHandled(true);
-		response.getWriter().println(
-				"<h1>reading from " + requestQueueName + " writting into " + responseQueueName + "</h1>");
 	}
 }
