@@ -1,9 +1,12 @@
 package com.recipitor.textextractor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.threadpool.ThreadPool;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.inject.Inject;
@@ -13,6 +16,7 @@ import com.recipitor.textextractor.data.response.Receipt;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueService;
+import com.xerox.amazonws.sqs2.SQSException;
 
 /**
  * This sample application retrieves (dequeues) a message from the queue specified by
@@ -54,6 +58,17 @@ public class QueueListener {
 
 	private String requestQueueName;
 	private String responseQueueName;
+	private MessageQueue requestQueue;
+	private MessageQueue responsetQueue;
+	private ThreadPool threadPool;
+
+	/**
+	 * @param val the threadPool to set
+	 */
+	@Inject
+	public void setThreadPool(final ThreadPool val) {
+		threadPool = val;
+	}
 
 	/**
 	 * @param qn the responseQueueName to set
@@ -77,43 +92,66 @@ public class QueueListener {
 	}
 
 	public void listen() throws Exception {
-		final int count = 0;
-		//		final String queueName = "extract_store_name_request_prod";
 		LGR.debug("queue : " + requestQueueName);
 		try {
-			// Retrieve the message queue object (by name)
-			final MessageQueue requestQueue = queueService.getOrCreateMessageQueue(requestQueueName);
-			//			final MessageQueue responsetQueue = SQSUtils.connectToQueue(responseQueueName, accessID, secretKey);
-			final MessageQueue responsetQueue = queueService.getOrCreateMessageQueue(responseQueueName);
-			responsetQueue.setEncoding(false);
-			requestQueue.setEncoding(false);
-			// Try to retrieve (dequeue) the message, and then delete it.
-			Message msg = null;
+			init();
 			while (true) {
-				msg = requestQueue.receiveMessage();
+				final Message msg = requestQueue.receiveMessage();
 				if (msg == null) {
-					if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
+					//					if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
 					doWait();
 					continue;
 				}
-				LGR.info("msg [" + msg.getMessageId() + "]");
-				//				msgQueue.deleteMessage(msg);
-				final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
-				final List<GuessResult> lst = receiptHandler.handle(b);
-				final com.recipitor.textextractor.data.response.Body rb = buildResponsBody(lst, b.getReceipt().getId());
-				final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				mapper.writeValue(bos, rb);
-				if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + bos.toString());
-				final String url = responsetQueue.sendMessage(bos.toString());
-				if (LGR.isDebugEnabled()) {
-					LGR.debug("url is [" + url + "]");
-					break;
-				}
+				threadPool.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							handleRequestMessage(msg);
+						} catch (final Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
 		} catch (final Exception ex) {
 			LGR.error("EXCEPTION, queue : " + requestQueueName, ex);
 		}
-		LGR.debug("Deleted " + count + " messages");
+	}
+
+	/**
+	 * @throws SQSException
+	 */
+	private void init() throws SQSException {
+		requestQueue = queueService.getOrCreateMessageQueue(requestQueueName);
+		responsetQueue = queueService.getOrCreateMessageQueue(responseQueueName);
+		responsetQueue.setEncoding(false);
+		requestQueue.setEncoding(false);
+	}
+
+	/**
+	 * @param msg
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws sonParseException 
+	 */
+	private void handleRequestMessage(final Message msg) throws Exception {
+		LGR.info("msg [" + msg.getMessageId() + "]");
+		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
+		final List<GuessResult> lst = receiptHandler.handle(b);
+		//		sendResponse(b.getReceipt().getId(), lst);
+		//		requestQueue.deleteMessage(msg);
+	}
+
+	/**
+	 * @param lst
+	 * @throws Exception 
+	 */
+	private void sendResponse(final String id, final List<GuessResult> lst) throws Exception {
+		final com.recipitor.textextractor.data.response.Body rb = buildResponsBody(lst, id);
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		mapper.writeValue(bos, rb);
+		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + bos.toString());
 	}
 
 	/**

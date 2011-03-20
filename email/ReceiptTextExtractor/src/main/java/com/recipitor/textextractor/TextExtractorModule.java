@@ -13,9 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.threadpool.DefaultThreadPool;
+import org.apache.commons.threadpool.ThreadPool;
 import org.apache.log4j.Logger;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provides;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.xerox.amazonws.sqs2.QueueService;
 
@@ -26,18 +31,22 @@ import com.xerox.amazonws.sqs2.QueueService;
  */
 public class TextExtractorModule extends AbstractModule {
 
+	private static final String PRODUCTION2 = "production";
+	private static final String DEV = "dev";
+	private static final String PRODUCTION = "PRODUCTION";
+	private static final String ENVIRONMENT = "ENVIRONMENT";
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(TextExtractorModule.class);
 	final Properties conf = new Properties();
-	public static boolean isDev = System.getProperty("PLATFORM") == null
-			|| !System.getProperty("PLATFORM").equals("EC2");
+	public static boolean isDev = System.getProperty(ENVIRONMENT) == null
+			|| !System.getProperty(ENVIRONMENT).equals(PRODUCTION);
 
 	/** 
 	 * 
 	 * @return either "dev" or "production" based on the runtime platfrom
 	 */
 	public static String getEnv() {
-		return TextExtractorModule.isDev ? "dev" : "production";
+		return TextExtractorModule.isDev ? DEV : PRODUCTION2;
 	}
 
 	public TextExtractorModule() throws IOException {
@@ -48,14 +57,26 @@ public class TextExtractorModule extends AbstractModule {
 		conf.load(resourceAsStream);
 	}
 
+	@SuppressWarnings("unused")
+	@Provides
+	@Inject
+	private QueueService proviceQueueService(@Named("aws.accessId") final String aid,
+			@Named("aws.secretKey") final String sk) {
+		return new QueueService(aid, sk, true);
+	}
+
+	@SuppressWarnings("unused")
+	@Provides
+	private ThreadPool provideThreadPool() {
+		return new DefaultThreadPool(5);
+	}
+
 	@Override
 	protected void configure() {
 		Names.bindProperties(binder(), conf);
-		bind(QueueService.class).to(RecipitorQueueService.class);
 		bind(IReceiptHandler.class).to(ReceiptHandler.class);
 		bind(OCRExtractor.class).to(Cuneiform.class);
 		bind(IBrandNameGuesser.class).to(BrandNameGuesser.class);
 		bind(IFuzzyMatcher.class).to(AGrepMatcher.class);
-		//		bind(ProcessExecutor.class).to(ProcessExecutor.class);
 	}
 }
