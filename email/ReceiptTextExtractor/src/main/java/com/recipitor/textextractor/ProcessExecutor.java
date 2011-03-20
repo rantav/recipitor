@@ -32,7 +32,6 @@ public class ProcessExecutor {
 	}
 
 	public String runAndGetResltsAsString(final String... args) throws Exception {
-		//		return Commons.loadListFromInputStream(run(args));
 		return Commons.loadStringFromInputStream(run(args));
 	}
 }

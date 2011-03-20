@@ -19,6 +19,7 @@
 	<classpathentry sourcepath="/home/ymaman/.gradle/cache/org.sonatype.sisu.inject/cglib/sources/cglib-2.2.1-v20090111-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/org.sonatype.sisu.inject/cglib/jars/cglib-2.2.1-v20090111.jar" exported="true"/>
 	<classpathentry sourcepath="/home/ymaman/.gradle/cache/junit/junit/sources/junit-4.8.2-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/junit/junit/jars/junit-4.8.2.jar" exported="true"/>
 	<classpathentry sourcepath="/home/ymaman/.gradle/cache/log4j/log4j/sources/log4j-1.2.16-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/log4j/log4j/bundles/log4j-1.2.16.jar" exported="true"/>
+	<classpathentry sourcepath="/home/ymaman/.gradle/cache/org.mockito/mockito-all/sources/mockito-all-1.8.1-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/org.mockito/mockito-all/jars/mockito-all-1.8.1.jar" exported="true"/>
 	<classpathentry sourcepath="/home/ymaman/.gradle/cache/org.apache.httpcomponents/httpcore/sources/httpcore-4.0.1-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.0.1.jar" exported="true"/>
 	<classpathentry kind="lib" path="/home/ymaman/.gradle/cache/commons-threadpool/commons-threadpool/jars/commons-threadpool-20030513.073905.jar" exported="true"/>
 	<classpathentry sourcepath="/home/ymaman/.gradle/cache/commons-codec/commons-codec/sources/commons-codec-1.4-sources.jar" kind="lib" path="/home/ymaman/.gradle/cache/commons-codec/commons-codec/jars/commons-codec-1.4.jar" exported="true"/>

@@ -20,12 +20,13 @@ import com.recipitor.textextractor.data.request.Body;
  */
 public class Cuneiform extends OCRExtractor {
 
+	public static final String CUNEIFORM_SCRIPT_NAME = "scripts/goCuneiform.sh";
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(Cuneiform.class);
 
 	@Override
 	public ExtractedTokens extract(final Body b) throws Exception {
-		final String tkns = processExecutor.runAndGetResltsAsString("scripts/goCuneiform.sh", b.getReceipt().getId(), b
+		final String tkns = processExecutor.runAndGetResltsAsString(CUNEIFORM_SCRIPT_NAME, b.getReceipt().getId(), b
 				.getReceipt().getUrl());
 		final ExtractedTokens $ = new ExtractedTokens();
 		$.addTokens(tkns);
