@@ -15,6 +15,7 @@ import com.recipitor.textextractor.data.request.Body;
 import com.recipitor.textextractor.data.response.Receipt;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
+import com.xerox.amazonws.sqs2.SQSException;
 
 /**
  * This sample application retrieves (dequeues) a message from the queue specified by
@@ -27,8 +28,9 @@ public class QueueListener {
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
 	ObjectMapper mapper;
-	String accessID;
-	String secretKey;
+	private ThreadPool threadPool;
+	private MessageQueue responseQueue;
+	private MessageQueue requestQueue;
 
 	/**
 	 * @param m the mapper to set
@@ -46,8 +48,6 @@ public class QueueListener {
 		receiptHandler = rh;
 	}
 
-	private MessageQueue requestQueue;
-
 	/**
 	 * @param v the requestQueue to set
 	 */
@@ -56,8 +56,6 @@ public class QueueListener {
 		requestQueue = v;
 	}
 
-	private MessageQueue responseQueue;
-
 	/**
 	 * @param v the responsetQueue to set
 	 */
@@ -65,8 +63,6 @@ public class QueueListener {
 	public void setResponseQueue(@Named("response") final MessageQueue v) {
 		responseQueue = v;
 	}
-
-	private ThreadPool threadPool;
 
 	/**
 	 * @param val the threadPool to set
@@ -78,12 +74,8 @@ public class QueueListener {
 
 	public void listen() throws Exception {
 		while (true) {
-			final Message msg = requestQueue.receiveMessage();
-			if (msg == null) {
-				//					if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
-				doWait();
-				continue;
-			}
+			final Message msg = popOrWait();
+			if (msg == null) continue;
 			threadPool.invokeLater(new Runnable() {
 
 				@Override
@@ -99,17 +91,30 @@ public class QueueListener {
 	}
 
 	/**
+	 * @return
+	 * @throws SQSException 
+	 */
+	Message popOrWait() throws SQSException {
+		final Message msg = requestQueue.receiveMessage();
+		if (msg == null) {
+			if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
+			doWait();
+		}
+		return msg;
+	}
+
+	/**
 	 * @param msg
 	 * @throws IOException 
 	 * @throws JsonMappingException 
 	 * @throws sonParseException 
 	 */
-	private void handleRequestMessage(final Message msg) throws Exception {
+	void handleRequestMessage(final Message msg) throws Exception {
 		LGR.info("msg [" + msg.getMessageId() + "]");
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
-		//		requestQueue.deleteMessage(msg);
+		requestQueue.deleteMessage(msg);
 	}
 
 	/**
@@ -122,7 +127,7 @@ public class QueueListener {
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
 		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + m);
-		//		responseQueue.sendMessage(m);
+		responseQueue.sendMessage(m);
 	}
 
 	/**

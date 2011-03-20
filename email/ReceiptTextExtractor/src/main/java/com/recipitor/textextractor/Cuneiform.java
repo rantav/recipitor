@@ -31,7 +31,7 @@ public class Cuneiform extends OCRExtractor {
 				.getReceipt().getUrl());
 		final ExtractedTokens $ = new ExtractedTokens();
 		$.addTokens(tkns);
-		if (LGR.isDebugEnabled()) LGR.debug("tokens\n" + tkns);
+		if (LGR.isDebugEnabled()) LGR.debug("tokens [" + tkns + "]");
 		return $;
 	}
 }
