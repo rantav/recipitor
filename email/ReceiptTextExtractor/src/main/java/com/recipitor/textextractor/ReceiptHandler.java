@@ -51,17 +51,12 @@ public class ReceiptHandler implements IReceiptHandler {
 	 */
 	@Override
 	public List<GuessResult> handle(final Body b) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("handling \n" + b);
+		if (LGR.isDebugEnabled()) LGR.debug("handling receipt [" + b.getReceipt().getId() + "]");
 		final ExtractedTokens et = ocrExtractor.extract(b);
-		final StringBuilder sb = new StringBuilder();
-		for (final String l : et.tokens)
-			sb.append(l + "\n");
-		if (LGR.isDebugEnabled()) LGR.debug("tokens\n" + sb);
 		final List<GuessResult> $ = brandNameGuesser.guess(et);
-		if (LGR.isDebugEnabled()) LGR.debug("got [" + $.size() + "] result");
 		for (final GuessResult gr : $)
 			if (LGR.isDebugEnabled())
-				LGR.debug("guess result is [" + gr.storeName + "] at distance [" + gr.distance + "]");
+				LGR.debug("guess result is [" + gr.name + "] at distance [" + gr.distance + "]");
 		return $;
 	}
 }

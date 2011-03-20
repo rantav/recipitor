@@ -22,7 +22,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueService;
+import com.xerox.amazonws.sqs2.SQSException;
 
 /**
  * @author ymaman
@@ -57,12 +59,38 @@ public class TextExtractorModule extends AbstractModule {
 		conf.load(resourceAsStream);
 	}
 
+	//
+	//	@SuppressWarnings("unused")
+	//	@Provides
+	//	@Inject
+	//	private QueueService proviceQueueService(@Named("aws.accessId") final String aid,
+	//			@Named("aws.secretKey") final String sk) {
+	//		return new QueueService(aid, sk, true);
+	//	}
 	@SuppressWarnings("unused")
 	@Provides
 	@Inject
-	private QueueService proviceQueueService(@Named("aws.accessId") final String aid,
-			@Named("aws.secretKey") final String sk) {
-		return new QueueService(aid, sk, true);
+	@Named("request")
+	private MessageQueue provideRequestQueueService(@Named("aws.accessId") final String aid,
+			@Named("aws.secretKey") final String sk, @Named("aws.request.queueName") final String qn)
+			throws SQSException {
+		if (LGR.isDebugEnabled()) LGR.debug("in request provider for name [" + qn + "]");
+		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
+		$.setEncoding(false);
+		return $;
+	}
+
+	@SuppressWarnings("unused")
+	@Provides
+	@Inject
+	@Named("response")
+	private MessageQueue provideResponseQueueService(@Named("aws.accessId") final String aid,
+			@Named("aws.secretKey") final String sk, @Named("aws.response.queueName") final String qn)
+			throws SQSException {
+		if (LGR.isDebugEnabled()) LGR.debug("in response provider for name [" + qn + "]");
+		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
+		$.setEncoding(false);
+		return $;
 	}
 
 	@SuppressWarnings("unused")
@@ -74,6 +102,9 @@ public class TextExtractorModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Names.bindProperties(binder(), conf);
+		//		bind(QueueListener.class);
+		//		bind(MessageQueue.class).annotatedWith(Names.named("request"));
+		//		bind(MessageQueue.class).annotatedWith(Names.named("response"));
 		bind(IReceiptHandler.class).to(ReceiptHandler.class);
 		bind(OCRExtractor.class).to(Cuneiform.class);
 		bind(IBrandNameGuesser.class).to(BrandNameGuesser.class);

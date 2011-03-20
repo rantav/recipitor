@@ -15,8 +15,6 @@ import com.recipitor.textextractor.data.request.Body;
 import com.recipitor.textextractor.data.response.Receipt;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
-import com.xerox.amazonws.sqs2.QueueService;
-import com.xerox.amazonws.sqs2.SQSException;
 
 /**
  * This sample application retrieves (dequeues) a message from the queue specified by
@@ -25,20 +23,12 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class QueueListener {
 
-	//	extends AbstractHandler {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
-	QueueService queueService;
 	IReceiptHandler receiptHandler;
 	ObjectMapper mapper;
 	String accessID;
 	String secretKey;
-
-	@Inject
-	public QueueListener(@Named("aws.accessId") final String aid, @Named("aws.secretKey") final String sk) {
-		accessID = aid;
-		secretKey = sk;
-	}
 
 	/**
 	 * @param m the mapper to set
@@ -56,10 +46,26 @@ public class QueueListener {
 		receiptHandler = rh;
 	}
 
-	private String requestQueueName;
-	private String responseQueueName;
 	private MessageQueue requestQueue;
-	private MessageQueue responsetQueue;
+
+	/**
+	 * @param v the requestQueue to set
+	 */
+	@Inject
+	public void setRequestQueue(@Named("request") final MessageQueue v) {
+		requestQueue = v;
+	}
+
+	private MessageQueue responseQueue;
+
+	/**
+	 * @param v the responsetQueue to set
+	 */
+	@Inject
+	public void setResponseQueue(@Named("response") final MessageQueue v) {
+		responseQueue = v;
+	}
+
 	private ThreadPool threadPool;
 
 	/**
@@ -70,63 +76,26 @@ public class QueueListener {
 		threadPool = val;
 	}
 
-	/**
-	 * @param qn the responseQueueName to set
-	 */
-	@Inject
-	public void setResponseQueueName(@Named("aws.response.queueName") final String qn) {
-		responseQueueName = qn;
-	}
-
-	/**
-	 * @param qs the queueService to set
-	 */
-	@Inject
-	public void setQueueService(final QueueService qs) {
-		queueService = qs;
-	}
-
-	@Inject
-	void setRequestQueueName(@Named("aws.request.queueName") final String qn) {
-		requestQueueName = qn;
-	}
-
 	public void listen() throws Exception {
-		LGR.debug("queue : " + requestQueueName);
-		try {
-			init();
-			while (true) {
-				final Message msg = requestQueue.receiveMessage();
-				if (msg == null) {
-					//					if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
-					doWait();
-					continue;
-				}
-				threadPool.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							handleRequestMessage(msg);
-						} catch (final Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+		while (true) {
+			final Message msg = requestQueue.receiveMessage();
+			if (msg == null) {
+				//					if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
+				doWait();
+				continue;
 			}
-		} catch (final Exception ex) {
-			LGR.error("EXCEPTION, queue : " + requestQueueName, ex);
-		}
-	}
+			threadPool.invokeLater(new Runnable() {
 
-	/**
-	 * @throws SQSException
-	 */
-	private void init() throws SQSException {
-		requestQueue = queueService.getOrCreateMessageQueue(requestQueueName);
-		responsetQueue = queueService.getOrCreateMessageQueue(responseQueueName);
-		responsetQueue.setEncoding(false);
-		requestQueue.setEncoding(false);
+				@Override
+				public void run() {
+					try {
+						handleRequestMessage(msg);
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -139,7 +108,7 @@ public class QueueListener {
 		LGR.info("msg [" + msg.getMessageId() + "]");
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		final List<GuessResult> lst = receiptHandler.handle(b);
-		//		sendResponse(b.getReceipt().getId(), lst);
+		sendResponse(b.getReceipt().getId(), lst);
 		//		requestQueue.deleteMessage(msg);
 	}
 
@@ -151,7 +120,9 @@ public class QueueListener {
 		final com.recipitor.textextractor.data.response.Body rb = buildResponsBody(lst, id);
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		mapper.writeValue(bos, rb);
-		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + bos.toString());
+		final String m = bos.toString();
+		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + m);
+		//		responseQueue.sendMessage(m);
 	}
 
 	/**

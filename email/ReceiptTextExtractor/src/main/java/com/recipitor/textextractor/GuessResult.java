@@ -20,6 +20,6 @@ public class GuessResult {
 
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(GuessResult.class);
-	public String storeName;
+	public String name;
 	public Double distance;
 }

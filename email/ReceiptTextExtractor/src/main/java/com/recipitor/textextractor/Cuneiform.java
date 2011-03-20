@@ -26,10 +26,12 @@ public class Cuneiform extends OCRExtractor {
 
 	@Override
 	public ExtractedTokens extract(final Body b) throws Exception {
+		if (LGR.isDebugEnabled()) LGR.debug("extracting text using cuneiform");
 		final String tkns = processExecutor.runAndGetResltsAsString(CUNEIFORM_SCRIPT_NAME, b.getReceipt().getId(), b
 				.getReceipt().getUrl());
 		final ExtractedTokens $ = new ExtractedTokens();
 		$.addTokens(tkns);
+		if (LGR.isDebugEnabled()) LGR.debug("tokens\n" + tkns);
 		return $;
 	}
 }
