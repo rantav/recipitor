@@ -56,13 +56,10 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 		for (final String gn : groceryStores)
 			for (final String token : et.tokens) {
 				final double l = fuzzyMatcher.isExist(gn.toLowerCase(), token.toLowerCase());
-				//token.toLowerCase());
-				//				if (l < level) {
 				final GuessResult gr = new GuessResult();
 				gr.storeName = gn;
 				gr.distance = l;
 				lst.add(gr);
-				//				}
 			}
 		Collections.sort(lst, new Comparator<GuessResult>() {
 

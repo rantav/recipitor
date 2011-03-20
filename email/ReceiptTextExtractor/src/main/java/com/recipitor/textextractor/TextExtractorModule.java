@@ -31,8 +31,8 @@ import com.xerox.amazonws.sqs2.QueueService;
  */
 public class TextExtractorModule extends AbstractModule {
 
-	private static final String PRODUCTION2 = "production";
-	private static final String DEV = "dev";
+	private static final String ENV_PRODUCTION_NAME = "production";
+	private static final String ENV_DEV_NAME = "dev";
 	private static final String PRODUCTION = "PRODUCTION";
 	private static final String ENVIRONMENT = "ENVIRONMENT";
 	@SuppressWarnings("unused")
@@ -43,10 +43,10 @@ public class TextExtractorModule extends AbstractModule {
 
 	/** 
 	 * 
-	 * @return either "dev" or "production" based on the runtime platfrom
+	 * @return either "dev" or "production" based on the environment
 	 */
 	public static String getEnv() {
-		return TextExtractorModule.isDev ? DEV : PRODUCTION2;
+		return TextExtractorModule.isDev ? ENV_DEV_NAME : ENV_PRODUCTION_NAME;
 	}
 
 	public TextExtractorModule() throws IOException {

@@ -39,7 +39,6 @@ public class AGrepMatcher implements IFuzzyMatcher {
 		for (int ne = 0; ne < MAX_NUM_OF_ERRORS; ne++) {
 			final String r = processExecutor.runAndGetResltsAsString("scripts/goAgrep.sh", term, String.valueOf(ne),
 					tokens);
-			//			if (LGR.isDebugEnabled()) LGR.debug("got respons\n[" + r + "]");
 			if (r != null) {
 				final int n = Integer.parseInt(r.trim());
 				if (n > 0) {

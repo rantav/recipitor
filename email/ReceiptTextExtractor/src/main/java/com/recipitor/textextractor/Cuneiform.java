@@ -25,11 +25,8 @@ public class Cuneiform extends OCRExtractor {
 
 	@Override
 	public ExtractedTokens extract(final Body b) throws Exception {
-		final String tkns = processExecutor.runAndGetResltsAsString("scripts/go.sh", b.getReceipt().getId(), b
-				.getReceipt().getUrl()
-		//						"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg"
-		//				"http://oi44.tinypic.com/f087y9.jpg");
-				);
+		final String tkns = processExecutor.runAndGetResltsAsString("scripts/goCuneiform.sh", b.getReceipt().getId(), b
+				.getReceipt().getUrl());
 		final ExtractedTokens $ = new ExtractedTokens();
 		$.addTokens(tkns);
 		return $;
