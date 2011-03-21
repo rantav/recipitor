@@ -97,15 +97,9 @@ public class QueueListener {
 	 */
 	Message popOrWait() throws SQSException {
 		final Message msg = requestQueue.receiveMessage();
-		if (msg == null) { //if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
-			doWait();
-		}
-		else
-		{
-			if (LGR.isDebugEnabled()) {
-				LGR.debug("request queue size is ~ ["+requestQueue.getApproximateNumberOfMessages()+"]");
-			}
-		}
+		if (msg == null) doWait();
+		else if (LGR.isDebugEnabled())
+			LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
 		return msg;
 	}
 
@@ -120,7 +114,7 @@ public class QueueListener {
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
-		//		requestQueue.deleteMessage(msg);
+		requestQueue.deleteMessage(msg);
 	}
 
 	/**
@@ -133,7 +127,7 @@ public class QueueListener {
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
 		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + m);
-		//		responseQueue.sendMessage(m);
+		responseQueue.sendMessage(m);
 	}
 
 	/**

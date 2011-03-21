@@ -34,8 +34,28 @@ public class ReceiptHandlerTest {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(ReceiptHandlerTest.class);
 
-	@Test
+	//	@Test
 	public void testAll() throws Exception {
+		final ReceiptHandler _ = init();
+		final Body b = new ObjectMapper()
+				.readValue(
+						"{\"receipt\":{\"id\":\"987\",\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\"}}",
+						Body.class);
+		_.handle(b);
+	}
+
+	@Test
+	public void testAll2() throws Exception {
+		final ReceiptHandler _ = init();
+		final Body b = new ObjectMapper().readValue(
+				"{\"receipt\":{\"id\":\"123\",\"url\":\"file:///home/ymaman/my.png\"}}", Body.class);
+		_.handle(b);
+	}
+
+	/**
+	 * @return
+	 */
+	private ReceiptHandler init() {
 		final Injector injector = Guice.createInjector(new AbstractModule() {
 
 			@Override
@@ -47,15 +67,10 @@ public class ReceiptHandlerTest {
 			}
 		});
 		final ReceiptHandler _ = injector.getInstance(ReceiptHandler.class);
-		final ObjectMapper om = new ObjectMapper();
-		final Body b = om
-				.readValue(
-						"{\"receipt\":{\"id\":\"987\",\"url\":\"http://rabidpaladin.com/images/rabidpaladin_com/WindowsLiveWriter/ShortShoppingTrip_1067C/receipt_2.jpg\"}}",
-						Body.class);
-		_.handle(b);
+		return _;
 	}
 
-//	@Test
+	//	@Test
 	public void testBheaviour() throws Exception {
 		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"url\":\"my_url\",\"id\":\"999\"}}", Body.class);
 		final ReceiptHandler _ = new ReceiptHandler();

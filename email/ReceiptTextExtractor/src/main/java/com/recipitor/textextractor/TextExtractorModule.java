@@ -40,6 +40,7 @@ public class TextExtractorModule extends AbstractModule {
 	private static final String ENV_DEV_NAME = "dev";
 	private static final String PRODUCTION = "PRODUCTION";
 	private static final String ENVIRONMENT = "ENVIRONMENT";
+	private static final int MAX_THREADS = 2;
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(TextExtractorModule.class);
 	final Properties conf = new Properties();
@@ -99,7 +100,7 @@ public class TextExtractorModule extends AbstractModule {
 	@SuppressWarnings("unused")
 	@Provides
 	private ThreadPool provideThreadPool() {
-		return new DefaultThreadPool(5);
+		return new DefaultThreadPool(MAX_THREADS);
 	}
 
 	@Override
