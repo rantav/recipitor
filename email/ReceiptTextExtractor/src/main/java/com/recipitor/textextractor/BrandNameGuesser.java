@@ -25,6 +25,8 @@ import com.google.inject.Inject;
  */
 public class BrandNameGuesser implements IBrandNameGuesser {
 
+	private static final Double MINIMAL_DISTANCE = 3.0d;
+	private static final int MAX_NUM_OF_RESULTS = 5;
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(BrandNameGuesser.class);
 	List<String> groceryStores;
@@ -79,8 +81,10 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	private List<GuessResult> filterResult(final List<GuessResult> lst) {
 		final List<GuessResult> $ = new LinkedList<GuessResult>();
 		final double th = lst.get(0).distance;
-		for (final GuessResult gr : lst)
-			if (gr.distance <= th) $.add(gr);
+		for (final GuessResult gr : lst) {
+			if ($.size() > MAX_NUM_OF_RESULTS) break;
+			if (gr.distance <= MINIMAL_DISTANCE && gr.distance <= th) $.add(gr);
+		}
 		return $;
 	}
 }

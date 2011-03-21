@@ -41,12 +41,14 @@ public class AGrepMatcher implements IFuzzyMatcher {
 		for (int ne = 0; ne < MAX_NUM_OF_ERRORS; ne++) {
 			final String r = processExecutor.runAndGetResltsAsString(AGREP_SCRIPT_WRAPPER, term, String.valueOf(ne),
 					tokens);
-			if (r != null) {
+			if (r != null) try {
 				final int n = Integer.parseInt(r.trim());
 				if (n > 0) {
 					$ = (double) ne / term.trim().length();
 					break;
 				}
+			} catch (final NumberFormatException ex) {
+				LGR.error("could not parse ["+r+"] as Number. treat it as 0");
 			}
 		}
 		return $;

@@ -24,6 +24,7 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class QueueListener {
 
+	private static final long QUEUE_POLL_PERIOD = 30000;
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
@@ -96,9 +97,14 @@ public class QueueListener {
 	 */
 	Message popOrWait() throws SQSException {
 		final Message msg = requestQueue.receiveMessage();
-		if (msg == null) {
-			if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
+		if (msg == null) { //if (LGR.isDebugEnabled()) LGR.debug("going to sleep");
 			doWait();
+		}
+		else
+		{
+			if (LGR.isDebugEnabled()) {
+				LGR.debug("request queue size is ~ ["+requestQueue.getApproximateNumberOfMessages()+"]");
+			}
 		}
 		return msg;
 	}
@@ -114,7 +120,7 @@ public class QueueListener {
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
-		requestQueue.deleteMessage(msg);
+		//		requestQueue.deleteMessage(msg);
 	}
 
 	/**
@@ -127,7 +133,7 @@ public class QueueListener {
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
 		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + m);
-		responseQueue.sendMessage(m);
+		//		responseQueue.sendMessage(m);
 	}
 
 	/**
@@ -150,7 +156,7 @@ public class QueueListener {
 	private void doWait() {
 		try {
 			synchronized (this) {
-				wait(1000);
+				wait(QUEUE_POLL_PERIOD);
 			}
 		} catch (final InterruptedException e) {
 			e.printStackTrace();

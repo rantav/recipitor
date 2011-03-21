@@ -33,6 +33,9 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class TextExtractorModule extends AbstractModule {
 
+	/** environment is detected by ENVIRONMENT env variable. if set to -DENVIRONMENT=PRODUCTION 
+	* acts as in production environment otherwise choose development environment
+	*/
 	private static final String ENV_PRODUCTION_NAME = "production";
 	private static final String ENV_DEV_NAME = "dev";
 	private static final String PRODUCTION = "PRODUCTION";
@@ -74,7 +77,7 @@ public class TextExtractorModule extends AbstractModule {
 	private MessageQueue provideRequestQueueService(@Named("aws.accessId") final String aid,
 			@Named("aws.secretKey") final String sk, @Named("aws.request.queueName") final String qn)
 			throws SQSException {
-		if (LGR.isDebugEnabled()) LGR.debug("in request provider for name [" + qn + "]");
+		if (LGR.isDebugEnabled()) LGR.debug("request queue is [" + qn + "]");
 		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
 		$.setEncoding(false);
 		return $;
@@ -87,7 +90,7 @@ public class TextExtractorModule extends AbstractModule {
 	private MessageQueue provideResponseQueueService(@Named("aws.accessId") final String aid,
 			@Named("aws.secretKey") final String sk, @Named("aws.response.queueName") final String qn)
 			throws SQSException {
-		if (LGR.isDebugEnabled()) LGR.debug("in response provider for name [" + qn + "]");
+		if (LGR.isDebugEnabled()) LGR.debug("response queue is [" + qn + "]");
 		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
 		$.setEncoding(false);
 		return $;

@@ -34,7 +34,7 @@ public class ReceiptHandlerTest {
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(ReceiptHandlerTest.class);
 
-	//	@Test
+	@Test
 	public void testAll() throws Exception {
 		final Injector injector = Guice.createInjector(new AbstractModule() {
 
@@ -55,7 +55,7 @@ public class ReceiptHandlerTest {
 		_.handle(b);
 	}
 
-	@Test
+//	@Test
 	public void testBheaviour() throws Exception {
 		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"url\":\"my_url\",\"id\":\"999\"}}", Body.class);
 		final ReceiptHandler _ = new ReceiptHandler();

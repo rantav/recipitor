@@ -16,11 +16,14 @@ import com.google.inject.Injector;
 
 /**
  * @author ymaman
+ * environemnt is detected by ENVIRONMENT env variable. if set to -DENVIRONMENT=PRODUCTION 
+ * acts as in production environemnt otherwise choose developemtn environemnt    
  * created: Mar 16, 2011
  * Associated Bugs: 
  */
 public class Main {
 
+	private static final int RECOVER_DELAY = 5000;
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(Main.class);
 
@@ -29,7 +32,14 @@ public class Main {
 		final Injector injector = Guice.createInjector(new TextExtractorModule());
 		final QueueListener qs = injector.getInstance(QueueListener.class);
 		invokeJetty();
-		qs.listen();
+		while (true)
+			try {
+				qs.listen();
+			} catch (final Throwable t) {
+				LGR.error("got exceptoin [" + t.getMessage(), t);
+				if (LGR.isDebugEnabled()) LGR.debug("wrill try to re-listen to queue in 5 secodns");
+				Thread.sleep(RECOVER_DELAY);
+			}
 	}
 
 	/**
