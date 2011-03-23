@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor.data.response;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 public class Body {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Body.class);
+	private static Logger LGR = LoggerFactory.getLogger(Body.class);
 	Receipt receipt;
 
 	public Body() {
@@ -37,6 +38,6 @@ public class Body {
 	 * @param r the receipt to set
 	 */
 	public void setReceipt(final Receipt r) {
-		this.receipt = r;
+		receipt = r;
 	}
 }

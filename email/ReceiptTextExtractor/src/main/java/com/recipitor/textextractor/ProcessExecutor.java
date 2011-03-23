@@ -12,7 +12,8 @@ package com.recipitor.textextractor;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
 public class ProcessExecutor {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(ProcessExecutor.class);
+	private static Logger LGR = LoggerFactory.getLogger(ProcessExecutor.class);
 
 	public InputStream run(final String... args) throws Exception {
 		final ProcessBuilder pb = new ProcessBuilder(args);

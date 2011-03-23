@@ -13,8 +13,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -24,7 +25,7 @@ import org.junit.Test;
 public class ProcessExecutorTest {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(ProcessExecutorTest.class);
+	private static Logger LGR = LoggerFactory.getLogger(ProcessExecutorTest.class);
 
 	@Test
 	public void test() throws Exception {

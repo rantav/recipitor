@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -24,7 +25,7 @@ public class AGrepMatcher implements IFuzzyMatcher {
 	public static final String AGREP_SCRIPT_WRAPPER = "scripts/goAgrep.sh";
 	private static final int MAX_NUM_OF_ERRORS = 3;
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(AGrepMatcher.class);
+	private static Logger LGR = LoggerFactory.getLogger(AGrepMatcher.class);
 	ProcessExecutor processExecutor;
 
 	/**
@@ -48,7 +49,7 @@ public class AGrepMatcher implements IFuzzyMatcher {
 					break;
 				}
 			} catch (final NumberFormatException ex) {
-				LGR.error("could not parse ["+r+"] as Number. treat it as 0");
+				LGR.error("could not parse [" + r + "] as Number. treat it as 0");
 			}
 		}
 		return $;

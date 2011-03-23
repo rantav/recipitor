@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -25,10 +26,10 @@ public class Main {
 
 	private static final int RECOVER_DELAY = 5000;
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Main.class);
+	private static Logger LGR = LoggerFactory.getLogger(Main.class);
 
 	public static void main(final String[] args) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("TextExtractor started");
+		LGR.debug("TextExtractor started");
 		final Injector injector = Guice.createInjector(new TextExtractorModule());
 		final QueueListener qs = injector.getInstance(QueueListener.class);
 		invokeJetty();
@@ -37,7 +38,7 @@ public class Main {
 				qs.listen();
 			} catch (final Throwable t) {
 				LGR.error("got exceptoin [" + t.getMessage(), t);
-				if (LGR.isDebugEnabled()) LGR.debug("wrill try to re-listen to queue in 5 secodns");
+				LGR.debug("wrill try to re-listen to queue in [{}] secodns", RECOVER_DELAY);
 				Thread.sleep(RECOVER_DELAY);
 			}
 	}

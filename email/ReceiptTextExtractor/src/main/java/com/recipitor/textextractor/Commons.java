@@ -17,7 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -27,7 +28,7 @@ import org.apache.log4j.Logger;
 public class Commons {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Commons.class);
+	private static Logger LGR = LoggerFactory.getLogger(Commons.class);
 
 	public static InputStream loadInputStreamFromSourceName(final String rn) {
 		return new BufferedInputStream(Commons.class.getResourceAsStream(rn));

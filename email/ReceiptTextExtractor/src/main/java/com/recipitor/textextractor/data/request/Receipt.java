@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor.data.request;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 public class Receipt {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Receipt.class);
+	private static Logger LGR = LoggerFactory.getLogger(Receipt.class);
 	String img_updated_at;
 	Long img_file_size;
 	String extracted_store_name;
@@ -43,7 +44,7 @@ public class Receipt {
 	 * @param u the url to set
 	 */
 	public void setUrl(final String u) {
-		this.url = u;
+		url = u;
 	}
 
 	public Receipt() {
@@ -61,7 +62,7 @@ public class Receipt {
 	 * @param v the img_updated_at to set
 	 */
 	public void setImg_updated_at(final String v) {
-		this.img_updated_at = v;
+		img_updated_at = v;
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class Receipt {
 	 * @param v the img_file_size to set
 	 */
 	public void setImg_file_size(final Long v) {
-		this.img_file_size = v;
+		img_file_size = v;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class Receipt {
 	 * @param v the extracted_store_name to set
 	 */
 	public void setExtracted_store_name(final String v) {
-		this.extracted_store_name = v;
+		extracted_store_name = v;
 	}
 
 	/**
@@ -103,7 +104,7 @@ public class Receipt {
 	 * @param v the created_at to set
 	 */
 	public void setCreated_at(final String v) {
-		this.created_at = v;
+		created_at = v;
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class Receipt {
 	 * @param v the updated_at to set
 	 */
 	public void setUpdated_at(final String v) {
-		this.updated_at = v;
+		updated_at = v;
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class Receipt {
 	 * @param v the id to set
 	 */
 	public void setId(final String v) {
-		this.id = v;
+		id = v;
 	}
 
 	/**
@@ -145,7 +146,7 @@ public class Receipt {
 	 * @param v the user_id to set
 	 */
 	public void setUser_id(final String v) {
-		this.user_id = v;
+		user_id = v;
 	}
 
 	/**
@@ -159,7 +160,7 @@ public class Receipt {
 	 * @param v the img_file_name to set
 	 */
 	public void setImg_file_name(final String v) {
-		this.img_file_name = v;
+		img_file_name = v;
 	}
 
 	/**
@@ -173,7 +174,7 @@ public class Receipt {
 	 * @param v the description to set
 	 */
 	public void setDescription(final String v) {
-		this.description = v;
+		description = v;
 	}
 
 	/**
@@ -187,6 +188,6 @@ public class Receipt {
 	 * @param v the img_content_type to set
 	 */
 	public void setImg_content_type(final String v) {
-		this.img_content_type = v;
+		img_content_type = v;
 	}
 }

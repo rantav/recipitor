@@ -11,7 +11,8 @@ package com.recipitor.textextractor;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.recipitor.textextractor.data.request.Body;
@@ -24,7 +25,7 @@ import com.recipitor.textextractor.data.request.Body;
 public class ReceiptHandler implements IReceiptHandler {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(ReceiptHandler.class);
+	private static Logger LGR = LoggerFactory.getLogger(ReceiptHandler.class);
 	OCRExtractor ocrExtractor;
 	IBrandNameGuesser brandNameGuesser;
 
@@ -51,12 +52,11 @@ public class ReceiptHandler implements IReceiptHandler {
 	 */
 	@Override
 	public List<GuessResult> handle(final Body b) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("handling receipt [" + b.getReceipt().getId() + "]");
+		LGR.debug("handling receipt [{}]", b.getReceipt().getId());
 		final ExtractedTokens et = ocrExtractor.extract(b);
 		final List<GuessResult> $ = brandNameGuesser.guess(et);
 		for (final GuessResult gr : $)
-			if (LGR.isDebugEnabled())
-				LGR.debug("guess result is [" + gr.name + "] at distance [" + gr.distance + "]");
+			LGR.debug("guess result is [{}] at distance [{}]", gr.name, gr.distance);
 		return $;
 	}
 }

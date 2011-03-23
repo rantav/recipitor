@@ -12,13 +12,14 @@ package com.recipitor.textextractor;
 import java.util.LinkedList;
 
 import org.apache.commons.threadpool.ThreadPool;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.recipitor.textextractor.data.request.Body;
 import com.xerox.amazonws.sqs2.Message;
@@ -32,7 +33,7 @@ import com.xerox.amazonws.sqs2.MessageQueue;
 public class QueueListenerTest {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(QueueListenerTest.class);
+	private static Logger LGR = LoggerFactory.getLogger(QueueListenerTest.class);
 	private static QueueListener _;
 
 	@BeforeClass

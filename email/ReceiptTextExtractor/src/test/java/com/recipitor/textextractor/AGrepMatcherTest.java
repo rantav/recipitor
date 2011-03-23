@@ -11,11 +11,12 @@ package com.recipitor.textextractor;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -25,7 +26,7 @@ import org.mockito.Mockito;
 public class AGrepMatcherTest {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(AGrepMatcherTest.class);
+	private static Logger LGR = LoggerFactory.getLogger(AGrepMatcherTest.class);
 	static AGrepMatcher _;
 
 	@BeforeClass

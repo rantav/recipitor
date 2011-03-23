@@ -33,13 +33,16 @@ dependencies {
     compile group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
     compile group: 'com.google.inject', name: 'guice', version: '3.0-rc2'
     compile group: 'org.codehaus.jackson', name: 'jackson-mapper-lgpl', version: '1.7.4'
-    compile group: 'log4j', name: 'log4j', version: '1.2.16'
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
     compile group: 'com.google.collections', name: 'google-collections', version: '1.0'
 	compile group: 'commons-threadpool', name: 'commons-threadpool', version: '20030513.073905'
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.6.1'
 	
 	testCompile 'org.mockito:mockito-all:1.8.1'
     testCompile 'junit:junit:4.+'
+
+    runtime group: 'log4j', name: 'log4j', version: '1.2.16'
     
 }

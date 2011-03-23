@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.threadpool.ThreadPool;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -26,7 +27,7 @@ public class QueueListener {
 
 	private static final long QUEUE_POLL_PERIOD = 30000;
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(QueueListener.class);
+	private static Logger LGR = LoggerFactory.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
 	ObjectMapper mapper;
 	private ThreadPool threadPool;
@@ -125,7 +126,7 @@ public class QueueListener {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
-		if (LGR.isDebugEnabled()) LGR.debug("about to post the message\n" + m);
+		LGR.debug("about to post the message\n{}", m);
 		responseQueue.sendMessage(m);
 	}
 

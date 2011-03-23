@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 public class GuessResult {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(GuessResult.class);
+	private static Logger LGR = LoggerFactory.getLogger(GuessResult.class);
 	public String name;
 	public Double distance;
 }

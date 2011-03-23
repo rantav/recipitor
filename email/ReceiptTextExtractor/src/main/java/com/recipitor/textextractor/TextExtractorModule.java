@@ -15,7 +15,8 @@ import java.util.Properties;
 
 import org.apache.commons.threadpool.DefaultThreadPool;
 import org.apache.commons.threadpool.ThreadPool;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -42,7 +43,7 @@ public class TextExtractorModule extends AbstractModule {
 	private static final String ENVIRONMENT = "ENVIRONMENT";
 	private static final int MAX_THREADS = 2;
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(TextExtractorModule.class);
+	private static Logger LGR = LoggerFactory.getLogger(TextExtractorModule.class);
 	final Properties conf = new Properties();
 	public static boolean isDev = System.getProperty(ENVIRONMENT) == null
 			|| !System.getProperty(ENVIRONMENT).equals(PRODUCTION);
@@ -56,10 +57,9 @@ public class TextExtractorModule extends AbstractModule {
 	}
 
 	public TextExtractorModule() throws IOException {
-		if (LGR.isInfoEnabled()) LGR.info("detetcing environment as [" + getEnv() + "]");
+		LGR.info("detetcing environment as [{}]", getEnv());
 		final InputStream resourceAsStream = Main.class.getResourceAsStream("/com/recipitor/textextractor/conf/"
 				+ getEnv() + "/recipitor.aws.properties");
-		if (LGR.isDebugEnabled()) LGR.debug("getEnv is " + getEnv());
 		conf.load(resourceAsStream);
 	}
 
@@ -78,7 +78,7 @@ public class TextExtractorModule extends AbstractModule {
 	private MessageQueue provideRequestQueueService(@Named("aws.accessId") final String aid,
 			@Named("aws.secretKey") final String sk, @Named("aws.request.queueName") final String qn)
 			throws SQSException {
-		if (LGR.isDebugEnabled()) LGR.debug("request queue is [" + qn + "]");
+		LGR.debug("request queue is [{}]", qn);
 		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
 		$.setEncoding(false);
 		return $;
@@ -91,7 +91,7 @@ public class TextExtractorModule extends AbstractModule {
 	private MessageQueue provideResponseQueueService(@Named("aws.accessId") final String aid,
 			@Named("aws.secretKey") final String sk, @Named("aws.response.queueName") final String qn)
 			throws SQSException {
-		if (LGR.isDebugEnabled()) LGR.debug("response queue is [" + qn + "]");
+		LGR.debug("response queue is [{}]", qn);
 		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
 		$.setEncoding(false);
 		return $;

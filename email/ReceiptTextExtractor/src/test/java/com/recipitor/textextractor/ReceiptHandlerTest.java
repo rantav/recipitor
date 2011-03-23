@@ -14,10 +14,11 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -32,7 +33,7 @@ import com.recipitor.textextractor.data.request.Body;
 public class ReceiptHandlerTest {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(ReceiptHandlerTest.class);
+	private static Logger LGR = LoggerFactory.getLogger(ReceiptHandlerTest.class);
 
 	//	@Test
 	public void testAll() throws Exception {

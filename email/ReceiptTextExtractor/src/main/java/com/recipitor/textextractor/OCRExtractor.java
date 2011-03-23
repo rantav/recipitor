@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.recipitor.textextractor.data.request.Body;
@@ -22,7 +23,7 @@ import com.recipitor.textextractor.data.request.Body;
 public abstract class OCRExtractor {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(OCRExtractor.class);
+	private static Logger LGR = LoggerFactory.getLogger(OCRExtractor.class);
 	ProcessExecutor processExecutor;
 
 	/**

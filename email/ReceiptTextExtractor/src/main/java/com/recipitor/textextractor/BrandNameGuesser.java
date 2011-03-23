@@ -14,7 +14,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -25,10 +26,10 @@ import com.google.inject.Inject;
  */
 public class BrandNameGuesser implements IBrandNameGuesser {
 
-	private static final Double MAX_DISTANCE = 3.0d;
+	private static final Double MAX_DISTANCE = 0.75;
 	private static final int MAX_NUM_OF_RESULTS = 5;
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(BrandNameGuesser.class);
+	private static Logger LGR = LoggerFactory.getLogger(BrandNameGuesser.class);
 	List<String> groceryStores;
 	IFuzzyMatcher fuzzyMatcher;
 

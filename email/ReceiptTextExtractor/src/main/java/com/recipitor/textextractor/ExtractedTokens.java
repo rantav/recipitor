@@ -12,7 +12,8 @@ package com.recipitor.textextractor;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ymaman
@@ -44,6 +45,6 @@ public class ExtractedTokens {
 	}
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(ExtractedTokens.class);
+	private static Logger LGR = LoggerFactory.getLogger(ExtractedTokens.class);
 	List<String> tokens = new LinkedList<String>();
 }

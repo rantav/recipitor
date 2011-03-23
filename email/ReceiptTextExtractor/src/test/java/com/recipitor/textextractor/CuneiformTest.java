@@ -11,11 +11,12 @@ package com.recipitor.textextractor;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.recipitor.textextractor.data.request.Body;
 
@@ -27,7 +28,7 @@ import com.recipitor.textextractor.data.request.Body;
 public class CuneiformTest {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(CuneiformTest.class);
+	private static Logger LGR = LoggerFactory.getLogger(CuneiformTest.class);
 	private static Cuneiform _;
 
 	@BeforeClass

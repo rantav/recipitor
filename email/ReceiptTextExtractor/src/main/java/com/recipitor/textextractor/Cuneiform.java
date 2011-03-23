@@ -9,7 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.recipitor.textextractor.data.request.Body;
 
@@ -22,16 +23,16 @@ public class Cuneiform extends OCRExtractor {
 
 	public static final String CUNEIFORM_SCRIPT_NAME = "scripts/goCuneiform.sh";
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Cuneiform.class);
+	private static Logger LGR = LoggerFactory.getLogger(Cuneiform.class);
 
 	@Override
 	public ExtractedTokens extract(final Body b) throws Exception {
-		if (LGR.isDebugEnabled()) LGR.debug("extracting text using cuneiform");
+		LGR.debug("extracting text using cuneiform");
 		final String tkns = processExecutor.runAndGetResltsAsString(CUNEIFORM_SCRIPT_NAME, b.getReceipt().getId(), b
 				.getReceipt().getUrl());
 		final ExtractedTokens $ = new ExtractedTokens();
 		$.addTokens(tkns);
-		if (LGR.isDebugEnabled()) LGR.debug("tokens [" + tkns + "]");
+		LGR.debug("tokens [" + tkns + "]");
 		return $;
 	}
 }

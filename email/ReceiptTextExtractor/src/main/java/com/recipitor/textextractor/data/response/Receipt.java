@@ -12,7 +12,8 @@ package com.recipitor.textextractor.data.response;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.recipitor.textextractor.GuessResult;
 
@@ -24,7 +25,7 @@ import com.recipitor.textextractor.GuessResult;
 public class Receipt {
 
 	@SuppressWarnings("unused")
-	private static Logger LGR = Logger.getLogger(Receipt.class);
+	private static Logger LGR = LoggerFactory.getLogger(Receipt.class);
 	String id;
 	List<GuessResult> extracted_store_names = new LinkedList<GuessResult>();
 	List<String> extracted_tokens_list = new LinkedList<String>();
