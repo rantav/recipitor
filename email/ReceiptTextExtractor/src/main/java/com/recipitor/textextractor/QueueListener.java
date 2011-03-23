@@ -33,6 +33,7 @@ public class QueueListener {
 	private ThreadPool threadPool;
 	private MessageQueue responseQueue;
 	private MessageQueue requestQueue;
+	boolean lastPopWasNull;
 
 	/**
 	 * @param m the mapper to set
@@ -98,7 +99,15 @@ public class QueueListener {
 	 */
 	Message popOrWait() throws SQSException {
 		final Message msg = requestQueue.receiveMessage();
-		if (msg == null) doWait();
+		if (msg == null) {
+			if (!lastPopWasNull)
+				LGR.debug("going to sleep. requesu queue size is ~[{}] ", requestQueue.getApproximateNumberOfMessages());
+			lastPopWasNull = true;
+			doWait();
+		} else {
+			LGR.debug("pop a message from queue. message id is [{}]", msg.getMessageId());
+			lastPopWasNull = false;
+		}
 		//		else LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
 		return msg;
 	}
@@ -110,9 +119,8 @@ public class QueueListener {
 	 * @throws sonParseException 
 	 */
 	void handleRequestMessage(final Message msg) throws Exception {
-		LGR.info("got message with ID [{}]", msg.getMessageId());
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
-		LGR.debug("receipt id is [{}]", b.getReceipt().getId());
+		LGR.debug("the receipt id is [{}]", b.getReceipt().getId());
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
 		requestQueue.deleteMessage(msg);

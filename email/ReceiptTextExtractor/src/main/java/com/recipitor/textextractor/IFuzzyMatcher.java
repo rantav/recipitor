@@ -16,5 +16,5 @@ package com.recipitor.textextractor;
  */
 public interface IFuzzyMatcher {
 
-	Double isExist(String term, String tokens) throws Exception;
+	GuessResult isExist(String term, String tokens) throws Exception;
 }

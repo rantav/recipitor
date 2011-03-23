@@ -23,4 +23,6 @@ public class GuessResult {
 	private static Logger LGR = LoggerFactory.getLogger(GuessResult.class);
 	public String name;
 	public Double distance;
+	public int numOfErrors;
+	public int termLength;
 }

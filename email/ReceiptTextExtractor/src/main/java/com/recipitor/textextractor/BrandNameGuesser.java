@@ -26,8 +26,8 @@ import com.google.inject.Inject;
  */
 public class BrandNameGuesser implements IBrandNameGuesser {
 
-	private static final Double MAX_DISTANCE = 0.75;
-	private static final int MAX_NUM_OF_RESULTS = 5;
+	//	private static final Double MAX_DISTANCE = 0.75;
+	//	private static final int MAX_NUM_OF_RESULTS = 5;
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(BrandNameGuesser.class);
 	List<String> groceryStores;
@@ -58,17 +58,21 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 		final List<GuessResult> lst = new LinkedList<GuessResult>();
 		for (final String gn : groceryStores)
 			for (final String token : et.tokens) {
-				final double l = fuzzyMatcher.isExist(gn.toLowerCase(), token.toLowerCase());
-				final GuessResult gr = new GuessResult();
+				final GuessResult gr = fuzzyMatcher.isExist(gn.toLowerCase(), token.toLowerCase());
+				if (gr == null) continue;
 				gr.name = gn;
-				gr.distance = l;
 				lst.add(gr);
 			}
 		Collections.sort(lst, new Comparator<GuessResult>() {
 
 			@Override
+			// comparing  by: first key is num of errors, and then by length of the term 
 			public int compare(final GuessResult o1, final GuessResult o2) {
-				return o1.distance.compareTo(o2.distance);
+				//				int $ = o1.numOfErrors - o2.numOfErrors;
+				//				if ($ != 0) return $;
+				//				$ = -(o1.termLength - o2.termLength);
+				final int $ = o1.distance.compareTo(o2.distance);
+				return $;
 			}
 		});
 		final List<GuessResult> $ = filterResult(lst);
@@ -81,11 +85,12 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	 */
 	private List<GuessResult> filterResult(final List<GuessResult> lst) {
 		final List<GuessResult> $ = new LinkedList<GuessResult>();
-		final double th = lst.get(0).distance;
-		for (final GuessResult gr : lst) {
-			if ($.size() > MAX_NUM_OF_RESULTS) break;
-			if (gr.distance <= MAX_DISTANCE && gr.distance <= th) $.add(gr);
-		}
+		if (!lst.isEmpty()) $.add(lst.get(0));
+		//		final double th = lst.get(0).distance;
+		//		for (final GuessResult gr : lst) {
+		//			if ($.size() > MAX_NUM_OF_RESULTS) break;
+		//			if (gr.distance <= MAX_DISTANCE && gr.distance <= th) $.add(gr);
+		//		}
 		return $;
 	}
 }

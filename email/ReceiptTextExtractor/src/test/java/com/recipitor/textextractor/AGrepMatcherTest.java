@@ -88,7 +88,7 @@ public class AGrepMatcherTest {
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "2", "world"))
 				.thenReturn("0");
 		_.setProcessExecutor(peMock);
-		Assert.assertEquals(Double.MAX_VALUE, _.isExist("hello", "world"));
+		Assert.assertEquals(null, _.isExist("hello", "world"));
 	}
 
 	/**

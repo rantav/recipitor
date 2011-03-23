@@ -35,7 +35,7 @@ public class ReceiptHandlerTest {
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(ReceiptHandlerTest.class);
 
-	//	@Test
+	@Test
 	public void testAll() throws Exception {
 		final ReceiptHandler _ = init();
 		final Body b = new ObjectMapper()
@@ -45,7 +45,7 @@ public class ReceiptHandlerTest {
 		_.handle(b);
 	}
 
-	@Test
+	//	@Test
 	public void testAll2() throws Exception {
 		final ReceiptHandler _ = init();
 		final Body b = new ObjectMapper().readValue(
