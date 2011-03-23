@@ -98,8 +98,7 @@ public class QueueListener {
 	Message popOrWait() throws SQSException {
 		final Message msg = requestQueue.receiveMessage();
 		if (msg == null) doWait();
-		else if (LGR.isDebugEnabled())
-			LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
+		else LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
 		return msg;
 	}
 

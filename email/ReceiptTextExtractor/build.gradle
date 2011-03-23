@@ -5,6 +5,8 @@ apply plugin: 'application'
 apply plugin:com.smokejumperit.gradle.AllPlugins
 apply plugin:com.smokejumperit.gradle.OneJarPlugin
 
+mainClassName = "com.recipitor.textextractor.Main"
+
 buildscript {
   repositories {
     mavenRepo urls:'http://repo.smokejumperit.com'
