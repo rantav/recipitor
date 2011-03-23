@@ -99,7 +99,7 @@ public class QueueListener {
 	Message popOrWait() throws SQSException {
 		final Message msg = requestQueue.receiveMessage();
 		if (msg == null) doWait();
-		else LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
+		//		else LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
 		return msg;
 	}
 
@@ -110,8 +110,9 @@ public class QueueListener {
 	 * @throws sonParseException 
 	 */
 	void handleRequestMessage(final Message msg) throws Exception {
-		LGR.info("msg [" + msg.getMessageId() + "]");
+		LGR.info("got message with ID [{}]", msg.getMessageId());
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
+		LGR.debug("receipt id is [{}]", b.getReceipt().getId());
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
 		requestQueue.deleteMessage(msg);
