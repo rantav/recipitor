@@ -79,17 +79,16 @@ public class QueueListener {
 		while (true) {
 			final Message msg = popOrWait();
 			if (msg == null) continue;
-			threadPool.invokeLater(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						handleRequestMessage(msg);
-					} catch (final Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+			//			threadPool.invokeLater(new Runnable() {
+			//				@Override
+			//				public void run() {
+			try {
+				handleRequestMessage(msg);
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+			//				}
+			//			});
 		}
 	}
 
