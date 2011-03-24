@@ -39,7 +39,7 @@ public class ReceiptHandlerTest {
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(ReceiptHandlerTest.class);
 
-	@Test
+	//	@Test
 	public void testAll() throws Exception {
 		final ReceiptHandler _ = init();
 		final Body b = new ObjectMapper()
@@ -51,12 +51,12 @@ public class ReceiptHandlerTest {
 
 	@Test
 	public void testTradeJoe() throws Exception {
-		doTest("Trader Joe's", "123", "tj_1_samll_size.jpg");
+		doTest("Trader Joe's", "123", "/tj_1_samll_size.jpg");
 	}
 
 	@Test
 	public void testJoann() throws Exception {
-		doTest("Joann", "123", "joann-img.png.resize.jpg");
+		doTest("Joann", "123", "/joann-img.png.resize.jpg");
 	}
 
 	/**
@@ -68,23 +68,12 @@ public class ReceiptHandlerTest {
 	private void doTest(final String name, final String id, final String fn) throws IOException, JsonParseException,
 			JsonMappingException, Exception {
 		final ReceiptHandler _ = init();
-		final Body b = new ObjectMapper()
-				.readValue(
-						"{\"receipt\":{\"id\":\""
-								+ id
-								+ "\",\"url\":\"file:///home/ymaman/var/recipitor/dev/recipitor/email/ReceiptTextExtractor/src/test/resources/"
-								+ fn + "\"}}", Body.class);
+		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName(fn), "/tmp/img-test" + id);
+		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"id\":\"" + id
+				+ "\",\"url\":\"file:///tmp/img-test" + id + "\"}}", Body.class);
 		final List<GuessResult> $ = _.handle(b);
 		Assert.assertEquals(1, $.size());
 		Assert.assertEquals(name, $.get(0).name);
-	}
-
-	//	@Test
-	public void testAll2() throws Exception {
-		final ReceiptHandler _ = init();
-		final Body b = new ObjectMapper().readValue(
-				"{\"receipt\":{\"id\":\"123\",\"url\":\"file:///home/ymaman/my.png\"}}", Body.class);
-		_.handle(b);
 	}
 
 	/**
