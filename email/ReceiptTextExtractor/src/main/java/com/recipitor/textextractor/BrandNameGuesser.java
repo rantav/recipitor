@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,17 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	//	private static final int MAX_NUM_OF_RESULTS = 5;
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(BrandNameGuesser.class);
-	List<String> groceryStores;
+	//	List<String> groceryStores;
 	IFuzzyMatcher fuzzyMatcher;
+	BrandData conf;
+
+	/**
+	 * @param v the conf to set
+	 */
+	@Inject
+	public void setConf(final BrandData v) {
+		conf = v;
+	}
 
 	/**
 	 * @param fm the fuzzyMatcher to set
@@ -46,7 +56,7 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	 * 
 	 */
 	public BrandNameGuesser() throws Exception {
-		groceryStores = Commons.loadListFromResourceName("/com/recipitor/textextractor/conf/NotableGroceryStores.txt");
+		//		groceryStores = Commons.loadListFromResourceName("/com/recipitor/textextractor/conf/NotableGroceryStores.txt");
 	}
 
 	/**
@@ -56,13 +66,14 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 	@Override
 	public List<GuessResult> guess(final ExtractedTokens et) throws Exception {
 		final List<GuessResult> lst = new LinkedList<GuessResult>();
-		for (final String gn : groceryStores)
-			for (final String token : et.tokens) {
-				final GuessResult gr = fuzzyMatcher.isExist(gn.toLowerCase(), token.toLowerCase());
-				if (gr == null) continue;
-				gr.name = gn;
-				lst.add(gr);
-			}
+		for (final Entry<String, List<String>> en : conf.names())
+			for (final String t : en.getValue())
+				for (final String token : et.tokens) {
+					final GuessResult gr = fuzzyMatcher.isExist(t.toLowerCase(), token.toLowerCase());
+					if (gr == null) continue;
+					gr.name = en.getKey();
+					lst.add(gr);
+				}
 		Collections.sort(lst, new Comparator<GuessResult>() {
 
 			@Override

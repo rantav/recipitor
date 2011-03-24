@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import org.apache.commons.threadpool.DefaultThreadPool;
 import org.apache.commons.threadpool.ThreadPool;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +102,14 @@ public class TextExtractorModule extends AbstractModule {
 	@Provides
 	private ThreadPool provideThreadPool() {
 		return new DefaultThreadPool(MAX_THREADS);
+	}
+
+	@Provides
+	BrandData provideBrandNamesConfig() throws Exception {
+		final BrandData $ = new ObjectMapper().readValue(
+				Commons.loadInputStreamFromSourceName("/com/recipitor/textextractor/conf/NotableGroceryStores.json"),
+				BrandData.class);
+		return $;
 	}
 
 	@Override

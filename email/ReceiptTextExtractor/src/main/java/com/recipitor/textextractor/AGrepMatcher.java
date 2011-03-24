@@ -45,6 +45,7 @@ public class AGrepMatcher implements IFuzzyMatcher {
 			if (r != null) try {
 				final int n = Integer.parseInt(r.trim());
 				if (n > 0) {
+					LGR.debug("found term [{}] with [{}] erros", term, ne);
 					$ = new GuessResult();
 					$.termLength = term.trim().length();
 					$.numOfErrors = ne;

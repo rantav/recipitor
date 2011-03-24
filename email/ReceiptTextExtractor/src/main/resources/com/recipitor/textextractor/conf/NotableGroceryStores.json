@@ -1,0 +1,372 @@
+{
+    "map": {
+        "A&P": [
+            "A&P" 
+        ],
+        "Acme Markets": [
+            "Acme Markets" 
+        ],
+        "Ahold": [
+            "Ahold" 
+        ],
+        "Albertsons LLC": [
+            "Albertsons LLC" 
+        ],
+        "ALDI": [
+            "ALDI" 
+        ],
+        "Asda": [
+            "Asda" 
+        ],
+        "Big B Grocery": [
+            "Big B Grocery" 
+        ],
+        "Big Y World Class Market": [
+            "Big Y World Class Market" 
+        ],
+        "Bi-Lo": [
+            "Bi-Lo" 
+        ],
+        "Brookshire Grocery Company": [
+            "Brookshire Grocery Company" 
+        ],
+        "Bruno's": [
+            "Brunos",
+            "Bruno's" 
+        ],
+        "Coles Supermarkets": [
+            "Coles Supermarkets" 
+        ],
+        "Costco": [
+            "Costco" 
+        ],
+        "Coop": [
+            "Coop" 
+        ],
+        "Co-op": [
+            "Co-op" 
+        ],
+        "Copps": [
+            "Copps" 
+        ],
+        "Cub Foods": [
+            "Cub Foods" 
+        ],
+        "Cumberland Farms": [
+            "Cumberland Farms" 
+        ],
+        "Delhaize": [
+            "Delhaize" 
+        ],
+        "Dominick's": [
+            "Dominick's",
+            "Dominicks" 
+        ],
+        "Dorothy Lane Market": [
+            "Dorothy Lane Market" 
+        ],
+        "Esselunga": [
+            "Esselunga" 
+        ],
+        "Extra Foods": [
+            "Extra Foods" 
+        ],
+        "Fairway Market": [
+            "Fairway Market" 
+        ],
+        "Fairway Markets": [
+            "Fairway Markets" 
+        ],
+        "Farm Boy": [
+            "Farm Boy" 
+        ],
+        "Food 4 Less": [
+            "Food 4 Less" 
+        ],
+        "Food Emporium": [
+            "Food Emporium" 
+        ],
+        "Food City": [
+            "Food City" 
+        ],
+        "FoodLand": [
+            "FoodLand" 
+        ],
+        "Food Lion": [
+            "Food Lion" 
+        ],
+        "Fred Meyer": [
+            "Fred Meyer" 
+        ],
+        "Fry's Food & Drug": [
+            "Fry's Food & Drug" 
+        ],
+        "FoodLand": [
+            "FoodLand" 
+        ],
+        "Giant-Carlisle": [
+            "Giant-Carlisle" 
+        ],
+        "Giant Eagle": [
+            "Giant Eagle" 
+        ],
+        "Giant Food Markets": [
+            "Giant Food Markets" 
+        ],
+        "Giant-Landover": [
+            "Giant-Landover" 
+        ],
+        "Grocery Outlet": [
+            "Grocery Outlet" 
+        ],
+        "H-E-B": [
+            "H-E-B" 
+        ],
+        "Haggen": [
+            "Haggen" 
+        ],
+        "Haldanes": [
+            "Haldanes" 
+        ],
+        "Hannaford Bros.": [
+            "Hannaford Bros.",
+            "Hannaford Bros" 
+        ],
+        "Harris Teeter": [
+            "Harris Teeter" 
+        ],
+        "Hy-Vee": [
+            "Hy-Vee" 
+        ],
+        "IGA": [
+            "IGA" 
+        ],
+        "Jewel": [
+            "Jewel" 
+        ],
+        "Jungle Jim's International Market": [
+            "Jungle Jim's International Market",
+            "Jungle Jims International Market" 
+        ],
+        "Key Food": [
+            "Key Food" 
+        ],
+        "Kroger": [
+            "Kroger" 
+        ],
+        "Loblaws": [
+            "Loblaws" 
+        ],
+        "Loeb": [
+            "Loeb" 
+        ],
+        "Lowes Foods": [
+            "Lowes Foods" 
+        ],
+        "New Albertsons": [
+            "New Albertsons" 
+        ],
+        "Macy's": [
+            "Macy's",
+            "Macys" 
+        ],
+        "Maxi": [
+            "Maxi" 
+        ],
+        "Meijer": [
+            "Meijer" 
+        ],
+        "Melia's Grocers and Tea Dealers": [
+            "Melia's Grocers and Tea Dealers",
+            "Melias Grocers and Tea Dealers" 
+        ],
+        "Metro": [
+            "Metro" 
+        ],
+        "Mercadona": [
+            "Mercadona" 
+        ],
+        "Morrisons": [
+            "Morrisons" 
+        ],
+        "Nakumatt": [
+            "Nakumatt" 
+        ],
+        "Nandan Megashop": [
+            "Nandan Megashop" 
+        ],
+        "Pathmark": [
+            "Pathmark" 
+        ],
+        "Pick 'N Save": [
+            "Pick 'N Save",
+            "Pick N Save" 
+        ],
+        "Piggly Wiggly": [
+            "Piggly Wiggly" 
+        ],
+        "Price Chopper": [
+            "Price Chopper" 
+        ],
+        "Provigo": [
+            "Provigo" 
+        ],
+        "Publix": [
+            "Publix" 
+        ],
+        "QFC": [
+            "QFC" 
+        ],
+        "Ralphs": [
+            "Ralphs" 
+        ],
+        "Real Canadian Superstore": [
+            "Real Canadian Superstore" 
+        ],
+        "Reasor's Grocery": [
+            "Reasor's Grocery",
+            "Reasors Grocery" 
+        ],
+        "Redner's Markets": [
+            "Redner's Markets",
+            "Redners Markets" 
+        ],
+        "Roche Bros.": [
+            "Roche Bros.",
+            "Roche Bros" 
+        ],
+        "Safeway": [
+            "Safeway" 
+        ],
+        "Sainsbury's": [
+            "Sainsbury's",
+            "Sainsburys" 
+        ],
+        "Save-a-Lot": [
+            "Save-a-Lot",
+            "SaveaLot" 
+        ],
+        "Save-On-Foods": [
+            "Save-On-Foods",
+            "SaveOnFoods" 
+        ],
+        "Schnucks": [
+            "Schnucks" 
+        ],
+        "Shaws": [
+            "Shaws" 
+        ],
+        "Shoppers Food & Pharmacy": [
+            "Shoppers Food & Pharmacy" 
+        ],
+        "Shoprite": [
+            "Shoprite" 
+        ],
+        "SM Megamall": [
+            "SM Megamall" 
+        ],
+        "Smith's Food and Drug": [
+            "Smith's Food and Drug",
+            "Smiths Food and Drug" 
+        ],
+        "Sobeys": [
+            "Sobeys" 
+        ],
+        "Somerfield": [
+            "Somerfield" 
+        ],
+        "Soriana": [
+            "Soriana" 
+        ],
+        "Spartan": [
+            "Spartan" 
+        ],
+        "Stater Bros.": [
+            "Stater Bros.",
+            "Stater Bros" 
+        ],
+        "Stewart's Shops": [
+            "Stewart's Shops",
+            "Stewarts Shops" 
+        ],
+        "Stop & Shop": [
+            "Stop & Shop" 
+        ],
+        "Super C": [
+            "Super C" 
+        ],
+        "Supervalu": [
+            "Supervalu" 
+        ],
+        "Target": [
+            "Target" 
+        ],
+        "Tesco": [
+            "Tesco" 
+        ],
+        "The Big Apple": [
+            "The Big Apple" 
+        ],
+        "The Fresh Market": [
+            "The Fresh Market" 
+        ],
+        "Tops Markets LLC": [
+            "Tops Markets LLC" 
+        ],
+        "Trader Joe's": [
+            "Trader Joe's",
+            "Trader Joes",
+            ".408. 245-1917",
+            "2310 Homestead Rd"
+        ],
+        "Ukrop's": [
+            "Ukrop's",
+            "Ukrops" 
+        ],
+        "Vons": [
+            "Vons" 
+        ],
+        "Waitrose": [
+            "Waitrose" 
+        ],
+        "Waldbaum's": [
+            "Waldbaum's",
+            "Waldbaums" 
+        ],
+        "Walmart": [
+            "Walmart" 
+        ],
+        "Wegmans": [
+            "Wegmans" 
+        ],
+        "Whole Foods Market": [
+            "Whole Foods Market" 
+        ],
+        "WinCo": [
+            "WinCo" 
+        ],
+        "Winn-Dixie": [
+            "Winn-Dixie",
+            "WinnDixie" 
+        ],
+        "Woodman's Food Market": [
+            "Woodman's Food Market",
+            "Woodmans Food Market" 
+        ],
+        "Woolworths supermarkets": [
+            "Woolworths supermarkets" 
+        ],
+        "Indian Opus": [
+            "Indian Opus" 
+        ],
+        "Joann" : [
+        	"Joann",
+        	"CUPERTINO. CA.95014.2405",
+        	"408-446 4204"	
+        ],
+        "Whole Foods" :[
+        	"Whole Foods",
+        	".408.257-7000"
+        ] 
+    }
+}

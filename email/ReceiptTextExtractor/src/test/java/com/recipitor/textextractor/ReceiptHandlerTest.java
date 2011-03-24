@@ -9,11 +9,14 @@
  */
 package com.recipitor.textextractor;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import com.recipitor.textextractor.data.request.Body;
 
 /**
@@ -45,6 +49,36 @@ public class ReceiptHandlerTest {
 		_.handle(b);
 	}
 
+	@Test
+	public void testTradeJoe() throws Exception {
+		doTest("Trader Joe's", "123", "tj_1_samll_size.jpg");
+	}
+
+	@Test
+	public void testJoann() throws Exception {
+		doTest("Joann", "123", "joann-img.png.resize.jpg");
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws Exception
+	 */
+	private void doTest(final String name, final String id, final String fn) throws IOException, JsonParseException,
+			JsonMappingException, Exception {
+		final ReceiptHandler _ = init();
+		final Body b = new ObjectMapper()
+				.readValue(
+						"{\"receipt\":{\"id\":\""
+								+ id
+								+ "\",\"url\":\"file:///home/ymaman/var/recipitor/dev/recipitor/email/ReceiptTextExtractor/src/test/resources/"
+								+ fn + "\"}}", Body.class);
+		final List<GuessResult> $ = _.handle(b);
+		Assert.assertEquals(1, $.size());
+		Assert.assertEquals(name, $.get(0).name);
+	}
+
 	//	@Test
 	public void testAll2() throws Exception {
 		final ReceiptHandler _ = init();
@@ -65,6 +99,15 @@ public class ReceiptHandlerTest {
 				bind(OCRExtractor.class).to(Cuneiform.class);
 				bind(IBrandNameGuesser.class).to(BrandNameGuesser.class);
 				bind(IFuzzyMatcher.class).to(AGrepMatcher.class);
+			}
+
+			@SuppressWarnings("unused")
+			@Provides
+			BrandData provideBrandNamesConfig() throws Exception {
+				final BrandData $ = new ObjectMapper().readValue(Commons
+						.loadInputStreamFromSourceName("/com/recipitor/textextractor/conf/NotableGroceryStores.json"),
+						BrandData.class);
+				return $;
 			}
 		});
 		final ReceiptHandler _ = injector.getInstance(ReceiptHandler.class);
