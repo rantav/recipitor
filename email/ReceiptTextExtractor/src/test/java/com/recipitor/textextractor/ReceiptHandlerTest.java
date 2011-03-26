@@ -55,6 +55,11 @@ public class ReceiptHandlerTest {
 	}
 
 	@Test
+	public void testLargeImage() throws Exception {
+		doTest("Trader Joe's", "456", "/tj.jpg");
+	}
+
+	@Test
 	public void testJoann() throws Exception {
 		doTest("Joann", "123", "/joann-img.png.resize.jpg");
 	}

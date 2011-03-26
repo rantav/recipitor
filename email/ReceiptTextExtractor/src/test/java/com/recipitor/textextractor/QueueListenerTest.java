@@ -21,6 +21,8 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.recipitor.textextractor.data.request.Body;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
@@ -39,6 +41,19 @@ public class QueueListenerTest {
 	@BeforeClass
 	public static void setup() {
 		_ = new QueueListener();
+	}
+
+	@Test
+	public void putLargeReceiptIntheQueue() throws Exception {
+		final Injector injector = Guice.createInjector(new TextExtractorModule());
+		final QueueListener _ = injector.getInstance(QueueListener.class);
+		final String fn = "/tmp/img-test-large.jpg";
+		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName("/tj.jpg"), fn);
+		final String id = "1q";
+		final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
+		final String r = _.REQ.sendMessage(msg);
+		Assert.assertNotNull(r);
+		LGR.debug("got r [{}]", r);
 	}
 
 	@SuppressWarnings("serial")

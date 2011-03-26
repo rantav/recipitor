@@ -25,16 +25,17 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class QueueListener {
 
-	private static final long QUEUE_POLL_PERIOD = 30000;
+	private static final long QUEUE_POLL_PERIOD = 5000;
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
 	ObjectMapper mapper;
 	private ThreadPool threadPool;
-	private MessageQueue responseQueue;
-	private MessageQueue requestQueue;
+	MessageQueue RES;
+	MessageQueue REQ;
 	boolean lastPopWasNull;
 
+	//	Set<String> history = new HashSet<String>();
 	/**
 	 * @param m the mapper to set
 	 */
@@ -53,18 +54,22 @@ public class QueueListener {
 
 	/**
 	 * @param v the requestQueue to set
+	 * @throws SQSException 
 	 */
 	@Inject
-	public void setRequestQueue(@Named("request") final MessageQueue v) {
-		requestQueue = v;
+	public void setRequestQueue(@Named("request") final MessageQueue v) throws SQSException {
+		REQ = v;
+		LGR.debug("REQ getVisibilityTimeout [{}]", REQ.getVisibilityTimeout());
 	}
 
 	/**
 	 * @param v the responsetQueue to set
+	 * @throws SQSException 
 	 */
 	@Inject
-	public void setResponseQueue(@Named("response") final MessageQueue v) {
-		responseQueue = v;
+	public void setResponseQueue(@Named("response") final MessageQueue v) throws SQSException {
+		RES = v;
+		LGR.debug("RES getVisibilityTimeout [{}]", RES.getVisibilityTimeout());
 	}
 
 	/**
@@ -79,16 +84,17 @@ public class QueueListener {
 		while (true) {
 			final Message msg = popOrWait();
 			if (msg == null) continue;
-			//			threadPool.invokeLater(new Runnable() {
-			//				@Override
-			//				public void run() {
-			try {
-				handleRequestMessage(msg);
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-			//				}
-			//			});
+			threadPool.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						handleRequestMessage(msg);
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 	}
 
@@ -97,14 +103,19 @@ public class QueueListener {
 	 * @throws SQSException 
 	 */
 	Message popOrWait() throws SQSException {
-		final Message msg = requestQueue.receiveMessage();
+		final Message msg = REQ.receiveMessage();
 		if (msg == null) {
-			if (!lastPopWasNull)
-				LGR.debug("going to sleep. requesu queue size is ~[{}] ", requestQueue.getApproximateNumberOfMessages());
+			//			if (!lastPopWasNull)
+			//				LGR.debug("going to sleep. requesu queue size is ~[{}] ", REQ.getApproximateNumberOfMessages());
 			lastPopWasNull = true;
 			doWait();
 		} else {
 			LGR.debug("pop a message from queue. message id is [{}]", msg.getMessageId());
+			//			if (history.contains(msg.getMessageId())) {
+			//				LGR.debug("message is in the hosttory, will skipp it");
+			//				doWait();
+			//				return null;
+			//			}
 			lastPopWasNull = false;
 		}
 		//		else LGR.debug("request queue size is ~ [" + requestQueue.getApproximateNumberOfMessages() + "]");
@@ -122,7 +133,12 @@ public class QueueListener {
 		LGR.debug("the receipt id is [{}]", b.getReceipt().getId());
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
-		requestQueue.deleteMessage(msg);
+		try {
+			REQ.deleteMessage(msg);
+			//			history.add(msg.getMessageId());
+		} catch (final Throwable th) {
+			LGR.error("got error ", th);
+		}
 	}
 
 	/**
@@ -135,7 +151,7 @@ public class QueueListener {
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
 		LGR.debug("about to post the message\n{}", m);
-		responseQueue.sendMessage(m);
+		RES.sendMessage(m);
 	}
 
 	/**

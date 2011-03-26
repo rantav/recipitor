@@ -10,7 +10,6 @@
 package com.recipitor.textextractor;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.threadpool.DefaultThreadPool;
@@ -25,8 +24,8 @@ import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.xerox.amazonws.sqs2.MessageQueue;
-import com.xerox.amazonws.sqs2.QueueService;
 import com.xerox.amazonws.sqs2.SQSException;
+import com.xerox.amazonws.sqs2.SQSUtils;
 
 /**
  * @author ymaman
@@ -46,6 +45,7 @@ public class TextExtractorModule extends AbstractModule {
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(TextExtractorModule.class);
 	final Properties conf = new Properties();
+	private final Properties secret = new Properties();
 	public static boolean isDev = System.getProperty(ENVIRONMENT) == null
 			|| !System.getProperty(ENVIRONMENT).equals(PRODUCTION);
 
@@ -59,19 +59,12 @@ public class TextExtractorModule extends AbstractModule {
 
 	public TextExtractorModule() throws IOException {
 		LGR.info("detetcing environment as [{}]", getEnv());
-		final InputStream resourceAsStream = Main.class.getResourceAsStream("/com/recipitor/textextractor/conf/"
-				+ getEnv() + "/recipitor.aws.properties");
-		conf.load(resourceAsStream);
+		conf.load(Commons.loadInputStreamFromSourceName("/com/recipitor/textextractor/conf/" + getEnv()
+				+ "/recipitor.aws.properties"));
+		secret.load(Commons
+				.loadInputStreamFromSourceName("/com/recipitor/textextractor/conf/recipitor.aws.secret.properties"));
 	}
 
-	//
-	//	@SuppressWarnings("unused")
-	//	@Provides
-	//	@Inject
-	//	private QueueService proviceQueueService(@Named("aws.accessId") final String aid,
-	//			@Named("aws.secretKey") final String sk) {
-	//		return new QueueService(aid, sk, true);
-	//	}
 	@SuppressWarnings("unused")
 	@Provides
 	@Inject
@@ -80,7 +73,19 @@ public class TextExtractorModule extends AbstractModule {
 			@Named("aws.secretKey") final String sk, @Named("aws.request.queueName") final String qn)
 			throws SQSException {
 		LGR.debug("request queue is [{}]", qn);
-		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
+		final MessageQueue $ = createQueue(aid, sk, qn);
+		return $;
+	}
+
+	/**
+	 * @param aid
+	 * @param sk
+	 * @param qn
+	 * @return
+	 * @throws SQSException
+	 */
+	private MessageQueue createQueue(final String aid, final String sk, final String qn) throws SQSException {
+		final MessageQueue $ = SQSUtils.connectToQueue(qn, aid, sk);
 		$.setEncoding(false);
 		return $;
 	}
@@ -93,8 +98,7 @@ public class TextExtractorModule extends AbstractModule {
 			@Named("aws.secretKey") final String sk, @Named("aws.response.queueName") final String qn)
 			throws SQSException {
 		LGR.debug("response queue is [{}]", qn);
-		final MessageQueue $ = new QueueService(aid, sk, true).getOrCreateMessageQueue(qn);
-		$.setEncoding(false);
+		final MessageQueue $ = createQueue(aid, sk, qn);
 		return $;
 	}
 
@@ -115,6 +119,7 @@ public class TextExtractorModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Names.bindProperties(binder(), conf);
+		Names.bindProperties(binder(), secret);
 		//		bind(QueueListener.class);
 		//		bind(MessageQueue.class).annotatedWith(Names.named("request"));
 		//		bind(MessageQueue.class).annotatedWith(Names.named("response"));

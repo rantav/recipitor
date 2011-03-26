@@ -69,6 +69,7 @@ public class BrandNameGuesser implements IBrandNameGuesser {
 		for (final Entry<String, List<String>> en : conf.names())
 			for (final String t : en.getValue())
 				for (final String token : et.tokens) {
+					if (token == null || token.trim().length() == 0) continue;
 					final GuessResult gr = fuzzyMatcher.isExist(t.toLowerCase(), token.toLowerCase());
 					if (gr == null) continue;
 					gr.name = en.getKey();
