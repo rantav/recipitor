@@ -25,7 +25,7 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class QueueListener {
 
-	private static final long QUEUE_POLL_PERIOD = 5000;
+	private static final long QUEUE_POLL_PERIOD = 32000;
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
@@ -84,17 +84,16 @@ public class QueueListener {
 		while (true) {
 			final Message msg = popOrWait();
 			if (msg == null) continue;
-			threadPool.invokeLater(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						handleRequestMessage(msg);
-					} catch (final Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+			//			threadPool.invokeLater(new Runnable() {
+			//				@Override
+			//				public void run() {
+			try {
+				handleRequestMessage(msg);
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+			//				}
+			//			});
 		}
 	}
 
