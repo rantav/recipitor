@@ -45,22 +45,22 @@ public class QueueListenerTest {
 	}
 
 	@Test
-	public void putLargeReceiptIntheQueue() throws Exception {
+	public void testShutDown() throws Exception {
 		final Injector injector = Guice.createInjector(new TextExtractorModule());
-		final QueueListener _ = injector.getInstance(QueueListener.class);
+		final QueueListener __ = injector.getInstance(QueueListener.class);
 		final String fn = "/tmp/img-test-large.jpg";
 		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName("/rec02.jpg"), fn);
 		for (int i = 0; i < 2; i++) {
 			final String id = "test_msg_id_" + i;
 			final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
-			_.REQ.sendMessage(msg);
+			__.REQ.sendMessage(msg);
 		}
 		final Thread t = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					_.listen();
+					__.listen();
 				} catch (final Exception e) {
 					e.printStackTrace();
 					Assert.fail();
@@ -69,7 +69,7 @@ public class QueueListenerTest {
 		});
 		t.start();
 		Thread.sleep(3000);
-		_.onShutDown();
+		__.onShutDown();
 	}
 
 	@SuppressWarnings("serial")

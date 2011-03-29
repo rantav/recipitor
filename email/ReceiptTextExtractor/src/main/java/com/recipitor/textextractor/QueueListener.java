@@ -66,10 +66,14 @@ public class QueueListener {
 				executorService.shutdown();
 				final boolean s = executorService.awaitTermination(PERIOD_FOR_JOIN, TimeUnit.MILLISECONDS);
 				if (s) LGR.info("application was gracefully finished");
-				else LGR.error("time period had passed and join was not done");
+				else {
+					LGR.error("time period had passed and join was not done");
+					throw new RuntimeException("time period had passed and join was not done");
+				}
 			}
 		} catch (final InterruptedException e) {
 			LGR.error("join was interrupted [{}]", e.getMessage(), e);
+			throw new RuntimeException("join was interrupted [" + e.getMessage() + "]");
 		}
 	}
 
