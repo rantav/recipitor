@@ -11,9 +11,9 @@ package com.recipitor.textextractor;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import org.apache.commons.threadpool.DefaultThreadPool;
-import org.apache.commons.threadpool.ThreadPool;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +104,8 @@ public class TextExtractorModule extends AbstractModule {
 
 	@SuppressWarnings("unused")
 	@Provides
-	private ThreadPool provideThreadPool() {
-		return new DefaultThreadPool(MAX_THREADS);
+	private ExecutorService provideThreadPool() {
+		return Executors.newFixedThreadPool(MAX_THREADS);
 	}
 
 	@Provides

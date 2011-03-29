@@ -3,8 +3,9 @@ package com.recipitor.textextractor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.threadpool.ThreadPool;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -25,17 +26,68 @@ import com.xerox.amazonws.sqs2.SQSException;
  */
 public class QueueListener {
 
-	private static final long QUEUE_POLL_PERIOD = 32000;
+	private static final long QUEUE_POLL_PERIOD = 32000; //32 secodns
+	protected static final long PERIOD_FOR_JOIN = 60000; //60 seconds
 	@SuppressWarnings("unused")
 	private static Logger LGR = LoggerFactory.getLogger(QueueListener.class);
 	IReceiptHandler receiptHandler;
 	ObjectMapper mapper;
-	private ThreadPool threadPool;
+	ExecutorService executorService;
 	MessageQueue RES;
 	MessageQueue REQ;
 	boolean lastPopWasNull;
 
-	//	Set<String> history = new HashSet<String>();
+	public QueueListener() {
+		setShoydownHook();
+	}
+
+	/**
+	 * 
+	 */
+	private void setShoydownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				onShutDown();
+			}
+		});
+	}
+
+	/**
+	 * 
+	 */
+	void onShutDown() {
+		LGR.info("got shoutdown signal, start shuting down");
+		setShoutDownFlag();
+		try {
+			LGR.info("about to join workers thread");
+			if (executorService != null) { // might be null -- for some other threads
+				executorService.shutdown();
+				final boolean s = executorService.awaitTermination(PERIOD_FOR_JOIN, TimeUnit.MILLISECONDS);
+				if (s) LGR.info("application was gracefully finished");
+				else LGR.error("time period had passed and join was not done");
+			}
+		} catch (final InterruptedException e) {
+			LGR.error("join was interrupted [{}]", e.getMessage(), e);
+		}
+	}
+
+	Object lock = new Object();
+	boolean shoutDownFlag;
+
+	void setShoutDownFlag() {
+		synchronized (lock) {
+			shoutDownFlag = true;
+		}
+	}
+
+	boolean shouldContinue() {
+		synchronized (lock) {
+			return !shoutDownFlag;
+		}
+	}
+
 	/**
 	 * @param m the mapper to set
 	 */
@@ -76,25 +128,27 @@ public class QueueListener {
 	 * @param val the threadPool to set
 	 */
 	@Inject
-	public void setThreadPool(final ThreadPool val) {
-		threadPool = val;
+	public void setExecutorService(final ExecutorService val) {
+		executorService = val;
 	}
 
 	public void listen() throws Exception {
-		while (true) {
+		while (shouldContinue()) {
 			final Message msg = popOrWait();
 			if (msg == null) continue;
-			//			threadPool.invokeLater(new Runnable() {
-			//				@Override
-			//				public void run() {
-			try {
-				handleRequestMessage(msg);
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-			//				}
-			//			});
+			executorService.execute(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						handleRequestMessage(msg);
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
+		LGR.info("stop listen to queue");
 	}
 
 	/**
@@ -110,6 +164,8 @@ public class QueueListener {
 			doWait();
 		} else {
 			LGR.debug("pop a message from queue. message id is [{}]", msg.getMessageId());
+			REQ.deleteMessage(msg);
+			LGR.debug("msg war removed from the queue");
 			//			if (history.contains(msg.getMessageId())) {
 			//				LGR.debug("message is in the hosttory, will skipp it");
 			//				doWait();
@@ -133,7 +189,7 @@ public class QueueListener {
 		final List<GuessResult> lst = receiptHandler.handle(b);
 		sendResponse(b.getReceipt().getId(), lst);
 		try {
-			REQ.deleteMessage(msg);
+			//			REQ.deleteMessage(msg);
 			//			history.add(msg.getMessageId());
 		} catch (final Throwable th) {
 			LGR.error("got error ", th);

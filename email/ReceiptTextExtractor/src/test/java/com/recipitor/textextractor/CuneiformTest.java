@@ -42,14 +42,14 @@ public class CuneiformTest {
 		final ProcessExecutor pe = Mockito.mock(ProcessExecutor.class);
 		_.setProcessExecutor(pe);
 		_.extract(b);
-		Mockito.verify(pe).runAndGetResltsAsString(Cuneiform.CUNEIFORM_SCRIPT_NAME, "999", "my_url");
+		Mockito.verify(pe).runAndGetResltsAsString(Cuneiform.CUNEIFORM_SCRIPT_NAME, "999", "my_url", "jpg");
 	}
 
 	@Test
 	public void checkTokens() throws Exception {
 		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"url\":\"my_url\",\"id\":\"999\"}}", Body.class);
 		final ProcessExecutor pe = Mockito.mock(ProcessExecutor.class);
-		Mockito.when(pe.runAndGetResltsAsString(Cuneiform.CUNEIFORM_SCRIPT_NAME, "999", "my_url")).thenReturn(
+		Mockito.when(pe.runAndGetResltsAsString(Cuneiform.CUNEIFORM_SCRIPT_NAME, "999", "my_url", "jpg")).thenReturn(
 				"token1\n\token2");
 		_.setProcessExecutor(pe);
 		final ExtractedTokens $ = _.extract(b);

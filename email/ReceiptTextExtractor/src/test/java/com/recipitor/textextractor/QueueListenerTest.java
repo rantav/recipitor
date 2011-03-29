@@ -10,8 +10,9 @@
 package com.recipitor.textextractor;
 
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.threadpool.ThreadPool;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -48,25 +49,36 @@ public class QueueListenerTest {
 		final Injector injector = Guice.createInjector(new TextExtractorModule());
 		final QueueListener _ = injector.getInstance(QueueListener.class);
 		final String fn = "/tmp/img-test-large.jpg";
-		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName("/tj.jpg"), fn);
-		final String id = "1q";
-		final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
-		final String r = _.REQ.sendMessage(msg);
-		Assert.assertNotNull(r);
-		LGR.debug("got r [{}]", r);
+		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName("/rec02.jpg"), fn);
+		for (int i = 0; i < 2; i++) {
+			final String id = "test_msg_id_" + i;
+			final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
+			_.REQ.sendMessage(msg);
+		}
+		final Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					_.listen();
+				} catch (final Exception e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
+		});
+		t.start();
+		Thread.sleep(3000);
+		_.onShutDown();
 	}
 
 	@SuppressWarnings("serial")
 	@Test
 	public void test() throws Exception {
 		_.setMapper(new ObjectMapper());
-		_.setThreadPool(new ThreadPool() {
-
-			@Override
-			public void invokeLater(final Runnable r) {
-				r.run();
-			}
-		});
+		final ExecutorService es = Mockito.mock(ExecutorService.class);
+		Mockito.when(es.awaitTermination(Matchers.anyLong(), Matchers.any(TimeUnit.class))).thenReturn(true);
+		_.setExecutorService(es);
 		//		_.setReceiptHandler(injector.getInstance(ReceiptHandler.class));
 		final ReceiptHandler rh = Mockito.mock(ReceiptHandler.class);
 		Mockito.when(rh.handle(Matchers.any(Body.class))).thenReturn(new LinkedList<GuessResult>() {

@@ -334,7 +334,8 @@
             "Waldbaums" 
         ],
         "Walmart": [
-            "Walmart" 
+            "Walmart",
+            "Save money. Live better"
         ],
         "Wegmans": [
             "Wegmans" 
@@ -367,6 +368,10 @@
         "Whole Foods" :[
         	"Whole Foods",
         	".408.257-7000"
+        ],
+        "Fraiche Yogurt" :[
+        	"Fraiche Yogurt",
+        	"650.566.0055"
         ] 
     }
 }

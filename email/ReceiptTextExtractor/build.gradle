@@ -36,7 +36,6 @@ dependencies {
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
     compile group: 'com.google.code.typica', name: 'typica', version: '1.7.2'
     compile group: 'com.google.collections', name: 'google-collections', version: '1.0'
-	compile group: 'commons-threadpool', name: 'commons-threadpool', version: '20030513.073905'
 	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.6.1'
 	
