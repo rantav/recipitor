@@ -51,8 +51,10 @@ public class AGrepMatcher implements IFuzzyMatcher {
 			$.numOfErrors = ne;
 			$.distance = (double) $.numOfErrors / $.termLength;
 			$.serachTerm = term;
-			for (final String l : lines)
-				$.foundTerm.add(l.trim());
+			// TODO: currently put search term as found term as well 			
+			$.foundTerm.add(term);
+			//			for (final String l : lines)
+			//				$.foundTerm.add(l.trim());
 			break;
 		}
 		return $;

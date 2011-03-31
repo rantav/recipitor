@@ -32,6 +32,21 @@ public class Receipt {
 	String description;
 	String img_content_type;
 	String url;
+	String extracted_store_name_raw_json;
+
+	/**
+	 * @return the extracted_store_name_raw_json
+	 */
+	public String getExtracted_store_name_raw_json() {
+		return extracted_store_name_raw_json;
+	}
+
+	/**
+	 * @param v the extracted_store_name_raw_json to set
+	 */
+	public void setExtracted_store_name_raw_json(final String v) {
+		this.extracted_store_name_raw_json = v;
+	}
 
 	/**
 	 * @return the url

@@ -140,11 +140,13 @@ public class QueueListener {
 		while (shouldContinue()) {
 			final Message msg = popOrWait();
 			if (msg == null) continue;
+			LGR.debug("before spawn a thread");
 			executorService.execute(new Runnable() {
 
 				@Override
 				public void run() {
 					try {
+						LGR.debug("new thread was created");
 						handleRequestMessage(msg);
 					} catch (final Exception e) {
 						e.printStackTrace();
@@ -169,7 +171,7 @@ public class QueueListener {
 		} else {
 			LGR.debug("pop a message from queue. message id is [{}]", msg.getMessageId());
 			REQ.deleteMessage(msg);
-			LGR.debug("msg war removed from the queue");
+			LGR.debug("msg was removed from the queue");
 			//			if (history.contains(msg.getMessageId())) {
 			//				LGR.debug("message is in the hosttory, will skipp it");
 			//				doWait();
@@ -188,6 +190,8 @@ public class QueueListener {
 	 * @throws sonParseException 
 	 */
 	void handleRequestMessage(final Message msg) throws Exception {
+		LGR.debug("got a message with ID [{}] ", msg.getMessageId());
+		LGR.debug("msg is [{}]", msg.getMessageBody());
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		LGR.debug("the receipt id is [{}]", b.getReceipt().getId());
 		final List<GuessResult> lst = receiptHandler.handle(b);
@@ -196,7 +200,8 @@ public class QueueListener {
 			//			REQ.deleteMessage(msg);
 			//			history.add(msg.getMessageId());
 		} catch (final Throwable th) {
-			LGR.error("got error ", th);
+			//			th.printStackTrace();
+			LGR.error("got error [{}]", th.getMessage());
 		}
 	}
 

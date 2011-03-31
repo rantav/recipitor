@@ -52,7 +52,12 @@ public class QueueListenerTest {
 		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName("/rec02.jpg"), fn);
 		for (int i = 0; i < 2; i++) {
 			final String id = "test_msg_id_" + i;
-			final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
+			//			final String msg = "{\"receipt\":{\"id\":\"" + id + "\",\"url\":\"file://" + fn + "\"}}";
+			final String msg = "{\"receipt\":{\"extracted_store_name_raw_json\":null,\"img_updated_at\":\"2011-03-31T22:36:26Z\",\"img_file_size\":4816,\"extracted_store_name\":null,\"created_at\":\"2011-03-31T22:36:26Z\",\"updated_at\":\"2011-03-31T22:36:26Z\",\"url\":\"https://s3.amazonaws.com/recipitor_receipts_prod/imgs/170/medium/screenshot2.png?AWSAccessKeyId=AKIAJ77AXDKGDKTJEOMQ&Expires=1301697386&Signature=gHsq%2BuhElgDCU9RzaoK%2BqngTH2o%3D\",\"id\":"
+					+ "\""
+					+ id
+					+ "\""
+					+ ",\"user_id\":3,\"img_file_name\":\"screenshot2.png\",\"description\":null,\"img_content_type\":\"image/png\"}}";
 			__.REQ.sendMessage(msg);
 		}
 		final Thread t = new Thread(new Runnable() {
@@ -69,7 +74,7 @@ public class QueueListenerTest {
 		});
 		t.start();
 		Thread.sleep(3000);
-		__.onShutDown();
+		//		__.onShutDown();
 	}
 
 	@SuppressWarnings("serial")
