@@ -54,7 +54,7 @@
 
 <servlet>
 	<servlet-name>upload</servlet-name>
-	<servlet-class>net.bundsoft.portal.action.UploadServlet</servlet-class>
+	<servlet-class>com.recipitor.datain.blobStore.example.UploadServlet</servlet-class>
 </servlet>
 <servlet-mapping>
 	<servlet-name>upload</servlet-name>
@@ -63,7 +63,7 @@
 
 <servlet>
 	<servlet-name>serve</servlet-name>
-	<servlet-class>net.bundsoft.portal.action.ServeServlet</servlet-class>
+	<servlet-class>com.recipitor.datain.blobStore.example.ServeServlet</servlet-class>
 </servlet>
 <servlet-mapping>
 	<servlet-name>serve</servlet-name>
@@ -72,7 +72,7 @@
 
 <servlet>
 	<servlet-name>MyUploader</servlet-name>
-	<servlet-class>net.bundsoft.portal.action.MyUploader</servlet-class>
+	<servlet-class>com.recipitor.datain.blobStore.example.MyUploader</servlet-class>
 </servlet>
 <servlet-mapping>
 	<servlet-name>MyUploader</servlet-name>
