@@ -50,4 +50,33 @@
 	<welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+    
+
+<servlet>
+	<servlet-name>upload</servlet-name>
+	<servlet-class>net.bundsoft.portal.action.UploadServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>upload</servlet-name>
+	<url-pattern>/upload</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>serve</servlet-name>
+	<servlet-class>net.bundsoft.portal.action.ServeServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>serve</servlet-name>
+	<url-pattern>/serve</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>MyUploader</servlet-name>
+	<servlet-class>net.bundsoft.portal.action.MyUploader</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>MyUploader</servlet-name>
+	<url-pattern>/MyUploader</url-pattern>
+</servlet-mapping>
+    
 </web-app>
