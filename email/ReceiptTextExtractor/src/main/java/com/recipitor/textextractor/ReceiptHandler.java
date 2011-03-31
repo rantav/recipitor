@@ -56,7 +56,7 @@ public class ReceiptHandler implements IReceiptHandler {
 		final ExtractedTokens et = ocrExtractor.extract(b);
 		final List<GuessResult> $ = brandNameGuesser.guess(et);
 		for (final GuessResult gr : $)
-			LGR.debug("guess result is [{}] at distance [{}]", gr.name, gr.distance);
+			LGR.debug("looking for [{}] found [{}] ", gr.serachTerm, gr.foundTerm.get(0));
 		return $;
 	}
 }

@@ -107,6 +107,6 @@ public class QueueListenerTest {
 		Mockito.verify(rq).deleteMessage(m1);
 		Mockito.verify(rs)
 				.sendMessage(
-						"{\"receipt\":{\"id\":\"999\",\"extracted_store_names\":[{\"name\":\"ALDI\",\"distance\":0.5,\"numOfErrors\":0,\"termLength\":0}],\"extracted_tokens_list\":[]}}");
+						"{\"receipt\":{\"id\":\"999\",\"extracted_store_names\":[{\"name\":\"ALDI\",\"distance\":0.5,\"numOfErrors\":0,\"termLength\":0,\"serachTerm\":null,\"foundTerm\":[]}],\"extracted_tokens_list\":[]}}");
 	}
 }

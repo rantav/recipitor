@@ -42,19 +42,18 @@ public class AGrepMatcher implements IFuzzyMatcher {
 		for (int ne = 0; ne < MAX_NUM_OF_ERRORS; ne++) {
 			final String r = processExecutor.runAndGetResltsAsString(AGREP_SCRIPT_WRAPPER, term, String.valueOf(ne),
 					tokens);
-			if (r != null) try {
-				final int n = Integer.parseInt(r.trim());
-				if (n > 0) {
-					LGR.debug("found term [{}] with [{}] erros", term, ne);
-					$ = new GuessResult();
-					$.termLength = term.trim().length();
-					$.numOfErrors = ne;
-					$.distance = (double) $.numOfErrors / $.termLength;
-					break;
-				}
-			} catch (final NumberFormatException ex) {
-				LGR.error("could not parse [" + r + "] as Number. treat it as 0");
-			}
+			if (r == null || r.isEmpty()) continue;
+			final String[] lines = r.split("\n");
+			if (lines.length == 0) continue;
+			LGR.debug("found term [{}] with [{}] erros", term, ne);
+			$ = new GuessResult();
+			$.termLength = term.trim().length();
+			$.numOfErrors = ne;
+			$.distance = (double) $.numOfErrors / $.termLength;
+			$.serachTerm = term;
+			for (final String l : lines)
+				$.foundTerm.add(l.trim());
+			break;
 		}
 		return $;
 	}

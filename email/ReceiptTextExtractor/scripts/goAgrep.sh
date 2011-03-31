@@ -4,6 +4,6 @@
 TERM=$1
 NUM_OF_ERRORS=$2
 TOKENS=$3 
-RES=`echo $TOKENS | agrep -$NUM_OF_ERRORS "$TERM" | wc -l`
+echo $TOKENS | agrep -$NUM_OF_ERRORS "$TERM"
 # echo $NUM_OF_ERRORS $TERM and RES is [$RES] >> /tmp/log.txt
-echo $RES
+#echo $RES

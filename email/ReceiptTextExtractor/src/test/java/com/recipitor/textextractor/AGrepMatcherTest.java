@@ -56,7 +56,7 @@ public class AGrepMatcherTest {
 	public void stopAfterMathcOneError() throws Exception {
 		final ProcessExecutor peMock = Mockito.mock(ProcessExecutor.class);
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "0", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "1", "world"))
 				.thenReturn("1");
 		_.setProcessExecutor(peMock);
@@ -68,9 +68,9 @@ public class AGrepMatcherTest {
 	public void stopAfterMathcTwoError() throws Exception {
 		final ProcessExecutor peMock = Mockito.mock(ProcessExecutor.class);
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "0", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "1", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "2", "world"))
 				.thenReturn("1");
 		_.setProcessExecutor(peMock);
@@ -82,11 +82,11 @@ public class AGrepMatcherTest {
 	public void stopAfterMathcThreeError() throws Exception {
 		final ProcessExecutor peMock = Mockito.mock(ProcessExecutor.class);
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "0", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "1", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		Mockito.when(peMock.runAndGetResltsAsString(AGrepMatcher.AGREP_SCRIPT_WRAPPER, "hello", "2", "world"))
-				.thenReturn("0");
+				.thenReturn("");
 		_.setProcessExecutor(peMock);
 		Assert.assertEquals(null, _.isExist("hello", "world"));
 	}
