@@ -9,6 +9,7 @@
  */
 package com.recipitor.datain;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -84,9 +85,17 @@ public class TaskHandlerServlet extends HttpServlet {
 		// Now read from the file using the Blobstore API
 		final BlobKey blobKey = fileService.getBlobKey(file);
 		final BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
-		final Blob b = new Blob(blobStoreService.fetchData(blobKey, 0, m.getSize()));
-		m.setAttachment(b);
-		LGR.debug("done with blob stuff going to post ");
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		int pos = 0;
+		while (pos < m.getSize()) {
+			final long chunkSize = Math.min(m.getSize() - pos, 800000);
+			final byte[] chunkData = blobStoreService.fetchData(blobKey, pos, pos + chunkSize);
+			bos.write(chunkData);
+			pos += chunkData.length;
+		}
+		final byte[] data = bos.toByteArray();
+		m.setAttachment(new Blob(data));
+		LGR.debug("done with blob stuff going to post its size is  " + data.length + " (" + m.getSize() + ")");
 		mailPoster.postMail(m);
 	}
 

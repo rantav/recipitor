@@ -41,6 +41,7 @@ public class MailDAO implements IMailDAO {
 
 	@Override
 	public void addMail(final Mail em) {
+		em.setAttachment(null);
 		final PersistenceManager pm = getPersistenceManager();
 		try {
 			pm.makePersistent(em);

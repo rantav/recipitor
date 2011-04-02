@@ -108,9 +108,13 @@ public class MailService implements IMailService {
 	 */
 	private void sotreAndQue(final List<Mail> ems) throws Throwable {
 		for (final Mail m : ems) {
+			LGR.debug("cp 0");
 			putInBlobstore(m);
+			LGR.debug("cp 1");
 			mailDAO.addMail(m);
+			LGR.debug("cp 2");
 			putInQueue(m);
+			LGR.debug("cp 3");
 		}
 	}
 
@@ -120,34 +124,42 @@ public class MailService implements IMailService {
 	 */
 	private void putInBlobstore(final Mail m) throws Throwable {
 		LGR.debug("about to write the attachment into blob strore");
-		// Get a file service
 		final FileService fileService = FileServiceFactory.getFileService();
-		// Create a new Blob file with mime-type "text/plain"
-		LGR.debug("mime type is " + m.getMimeType());
 		final AppEngineFile file = fileService.createNewBlobFile(m.getMimeType());
 		final String fp = file.getFullPath();
 		m.setFilePath(fp);
-		// Open a channel to write to it
+		putChunks(fp, m.getAttachment().getBytes());
+		LGR.debug("done with blobstore");
+	}
+
+	/**
+	 * @param fp
+	 * @param attachment
+	 * @throws Throwable 
+	 */
+	private void putChunks(final String fp, final byte[] data) throws Throwable {
 		try {
-			final boolean lock = true;
-			final FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
-			int pos = 0;
-			final byte[] data = m.getAttachment().getBytes();
+			LGR.debug("total size is [" + data.length + "]");
+			final FileService fileService = FileServiceFactory.getFileService();
 			final long dataLen = data.length;
+			FileWriteChannel writeChannel = null;
+			int pos = 0;
 			while (pos < dataLen) {
+				final AppEngineFile file = new AppEngineFile(fp);
 				final int hm = (int) Math.min(dataLen - pos, 800000);
+				final boolean lock = hm == dataLen - pos;
+				LGR.debug("lock is [" + lock + "]");
+				writeChannel = fileService.openWriteChannel(file, lock);
 				LGR.debug("about to store " + hm + " bytes, starting from " + pos + " ");
 				final int actual = writeChannel.write(ByteBuffer.wrap(data, pos, hm));
 				LGR.debug(actual + " bytes were written actually");
 				pos += actual;
 			}
-			// Now finalize
-			writeChannel.closeFinally();
+			if (writeChannel != null) writeChannel.closeFinally();
 		} catch (final Throwable t) {
 			t.printStackTrace();
 			throw t;
 		}
-		LGR.debug("done with blobstore");
 	}
 
 	/**
@@ -248,10 +260,20 @@ public class MailService implements IMailService {
 		LGR.debug("size is about to be [" + m.getSize() + "]");
 		final BlobKey blobKey = fileService.getBlobKey(file);
 		final BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
-		final Blob b = new Blob(blobStoreService.fetchData(blobKey, 0, m.getSize()));
-		final byte[] attach = b.getBytes();
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		int pos = 0;
+		while (pos < m.getSize()) {
+			final long chunkSize = Math.min(m.getSize() - pos, 800000);
+			final byte[] chunkData = blobStoreService.fetchData(blobKey, pos, pos + chunkSize);
+			bos.write(chunkData);
+			pos += chunkData.length;
+		}
+		bos.flush();
+		bos.close();
+		final byte[] data = bos.toByteArray();
+		LGR.debug("data size is " + data.length);
 		resp.setContentType(m.getMimeType());
-		resp.setContentLength(attach.length);
-		resp.getOutputStream().write(attach);
+		resp.setContentLength(data.length);
+		resp.getOutputStream().write(data);
 	}
 }
