@@ -9,12 +9,14 @@
  */
 package com.recipitor.datain;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -47,37 +57,97 @@ public class MailService implements IMailService {
 	@Override
 	public void onNewMail(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 		try {
-			if (LGR.isDebugEnabled()) LGR.debug("onNewMail");
+			if (LGR.isDebugEnabled()) LGR.debug("onNewMail blobStroe support");
 			final MimeMessage message = new MimeMessage(Session.getDefaultInstance(new Properties(), null),
 					req.getInputStream());
 			final List<Mail> ems = mailExtractor.extract(message);
 			if (MyGuiceServletContextListener.isDev && ems.isEmpty()) {
+				final String rn = "ReceiptSwiss.jpg";
 				LGR.debug("in debug mode, send a receipt with default for user [yonatanm@gmail.com]");
 				final Mail m = new Mail();
 				m.setFrom("yonatanm@gmail.com");
 				m.setMessageID("123");
 				m.setSentDate(new Date());
 				m.setSubject("subject");
-				m.setAttachment(null);
-				m.setMimeType(null);
-				m.setFileName(null);
+				final ByteArrayOutputStream bo = loadSampleImage(rn);
+				final byte[] content = bo.toByteArray();
+				m.setAttachment(new Blob(content));
+				m.setSize((long) content.length);
+				m.setMimeType("image/jpeg");
+				m.setFileName(rn);
 				ems.add(m);
 			}
 			sotreAndQue(ems);
-		} catch (final MessagingException e) {
+		} catch (final Throwable e) {
+			e.printStackTrace();
 			LGR.error("got error [" + e.getMessage() + "]", e);
 			return;
 		}
 	}
 
 	/**
-	 * @param ems
+	 * @return
+	 * @throws IOException
 	 */
-	private void sotreAndQue(final List<Mail> ems) {
+	private ByteArrayOutputStream loadSampleImage(final String rn) throws IOException {
+		final InputStream is = TaskHandlerServlet.class.getClassLoader().getResourceAsStream(rn);
+		final ByteArrayOutputStream bo = new ByteArrayOutputStream();
+		final byte[] buff = new byte[1024];
+		while (true) {
+			final int len = is.read(buff);
+			if (len < 0) break;
+			bo.write(buff, 0, len);
+		}
+		is.close();
+		return bo;
+	}
+
+	/**
+	 * @param ems
+	 * @throws IOException 
+	 */
+	private void sotreAndQue(final List<Mail> ems) throws Throwable {
 		for (final Mail m : ems) {
+			putInBlobstore(m);
 			mailDAO.addMail(m);
 			putInQueue(m);
 		}
+	}
+
+	/**
+	 * @param attachment
+	 * @throws IOException 
+	 */
+	private void putInBlobstore(final Mail m) throws Throwable {
+		LGR.debug("about to write the attachment into blob strore");
+		// Get a file service
+		final FileService fileService = FileServiceFactory.getFileService();
+		// Create a new Blob file with mime-type "text/plain"
+		LGR.debug("mime type is " + m.getMimeType());
+		final AppEngineFile file = fileService.createNewBlobFile(m.getMimeType());
+		final String fp = file.getFullPath();
+		m.setFilePath(fp);
+		// Open a channel to write to it
+		try {
+			final boolean lock = true;
+			final FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
+			int pos = 0;
+			final byte[] data = m.getAttachment().getBytes();
+			final long dataLen = data.length;
+			while (pos < dataLen) {
+				final int hm = (int) Math.min(dataLen - pos, 800000);
+				LGR.debug("about to store " + hm + " bytes, starting from " + pos + " ");
+				final int actual = writeChannel.write(ByteBuffer.wrap(data, pos, hm));
+				LGR.debug(actual + " bytes were written actually");
+				pos += actual;
+			}
+			// Now finalize
+			writeChannel.closeFinally();
+		} catch (final Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
+		LGR.debug("done with blobstore");
 	}
 
 	/**
@@ -105,8 +175,9 @@ public class MailService implements IMailService {
 		sb.append("<th>message ID</th>");
 		sb.append("<th>sent Date</th>");
 		sb.append("<th>from</th>");
+		sb.append("<th>path</th>");
 		//		sb.append("<th>subject</th>");
-		sb.append("<th>length</th>");
+		sb.append("<th>size</th>");
 		sb.append("<th>mime type</th>");
 		sb.append("<th>attachment</th>");
 		sb.append("</tr>");
@@ -120,13 +191,13 @@ public class MailService implements IMailService {
 			sb.append("<td>" + chop(encode(m.getMessageID())) + "</td>");
 			sb.append("<td>" + m.getSentDate() + "</td>");
 			sb.append("<td>" + encode(m.getFrom()) + "</td>");
+			sb.append("<td>" + m.getFilePath() + "</td>");
+			sb.append("<td>" + m.getSize() + "</td>");
 			//			sb.append("<td>" + m.getSubject() + "</td>");
-			if (m.getAttachment() != null) {
-				sb.append("<td>" + m.getAttachment().getBytes().length + "</td>");
+			if (m.getSize() != null) {
 				sb.append("<td>" + m.getMimeType() + "</td>");
 				sb.append("<td><a href='/_ah/mail/receipt?attachment=" + m.getId() + "'>download</a></th>");
 			} else {
-				sb.append("<td>NA</td>");
 				sb.append("<td>NA</td>");
 				sb.append("<td>NA</td>");
 			}
@@ -172,7 +243,13 @@ public class MailService implements IMailService {
 	@Override
 	public void sohwAttachment(final String id, final HttpServletResponse resp) throws IOException {
 		final Mail m = mailDAO.getMail(Long.parseLong(id));
-		final byte[] attach = m.getAttachment().getBytes();
+		final AppEngineFile file = new AppEngineFile(m.getFilePath());
+		final FileService fileService = FileServiceFactory.getFileService();
+		LGR.debug("size is about to be [" + m.getSize() + "]");
+		final BlobKey blobKey = fileService.getBlobKey(file);
+		final BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
+		final Blob b = new Blob(blobStoreService.fetchData(blobKey, 0, m.getSize()));
+		final byte[] attach = b.getBytes();
 		resp.setContentType(m.getMimeType());
 		resp.setContentLength(attach.length);
 		resp.getOutputStream().write(attach);

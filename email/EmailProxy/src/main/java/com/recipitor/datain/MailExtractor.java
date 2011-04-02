@@ -81,6 +81,7 @@ public class MailExtractor implements IMailExtractor {
 				m.setAttachment(new Blob(r.data));
 				m.setMimeType(r.contentType);
 				m.setFileName(r.fileName);
+				m.setSize((long) r.data.length);
 				$.add(m);
 			}
 		}

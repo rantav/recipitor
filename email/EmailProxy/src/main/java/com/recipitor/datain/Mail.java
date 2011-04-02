@@ -42,17 +42,20 @@ public class Mail implements Serializable {
 	private Date sentDate;
 	@Persistent
 	private String mimeType;
-	@Persistent
 	private Blob attachment;
+	@Persistent
+	private String filePath;
 	@Persistent
 	private String fileName;
 	@Persistent
 	private String messageID;
 	@Persistent
 	private Boolean isActive = true;
+	@Persistent
+	private Long size;
 
 	public Mail(final String fv, final String cs, final Date dv, final String mv, final Blob av, final String midV,
-			final Boolean iaV, final String vFn) {
+			final Boolean iaV, final String vFn, final String vFp, final Long vSi) {
 		super();
 		from = fv;
 		subject = cs;
@@ -62,6 +65,8 @@ public class Mail implements Serializable {
 		messageID = midV;
 		isActive = iaV;
 		fileName = vFn;
+		filePath = vFp;
+		setSize(vSi);
 	}
 
 	public Date getSentDate() {
@@ -151,6 +156,35 @@ public class Mail implements Serializable {
 		sb.append("mimeType [" + mimeType + "] ");
 		sb.append("hasAttachment [" + (attachment != null) + "]");
 		sb.append("fileName [" + fileName + "]");
+		sb.append("filePath [" + filePath + "]");
 		return sb.toString();
+	}
+
+	/**
+	 * @param v the filePath to set
+	 */
+	public void setFilePath(final String v) {
+		filePath = v;
+	}
+
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
+
+	/**
+	 * @param v the size to set
+	 */
+	public void setSize(final Long v) {
+		this.size = v;
+	}
+
+	/**
+	 * @return the size
+	 */
+	public Long getSize() {
+		return size;
 	}
 }

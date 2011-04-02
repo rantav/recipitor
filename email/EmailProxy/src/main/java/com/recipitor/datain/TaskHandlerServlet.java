@@ -19,6 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -70,6 +77,16 @@ public class TaskHandlerServlet extends HttpServlet {
 	 * @throws MalformedURLException 
 	 */
 	private void postMailToFrontEnd(final Mail m) throws Exception {
+		LGR.debug("about to featch attachment [" + m.getFilePath() + "]");
+		final AppEngineFile file = new AppEngineFile(m.getFilePath());
+		final FileService fileService = FileServiceFactory.getFileService();
+		LGR.debug("size is about to be [" + m.getSize() + "]");
+		// Now read from the file using the Blobstore API
+		final BlobKey blobKey = fileService.getBlobKey(file);
+		final BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
+		final Blob b = new Blob(blobStoreService.fetchData(blobKey, 0, m.getSize()));
+		m.setAttachment(b);
+		LGR.debug("done with blob stuff going to post ");
 		mailPoster.postMail(m);
 	}
 
