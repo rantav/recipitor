@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.recipitor.textextractor.data.request.Body;
+import com.recipitor.textextractor.data.response.Receipt;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
 
@@ -86,16 +87,22 @@ public class QueueListenerTest {
 		_.setExecutorService(es);
 		//		_.setReceiptHandler(injector.getInstance(ReceiptHandler.class));
 		final ReceiptHandler rh = Mockito.mock(ReceiptHandler.class);
-		Mockito.when(rh.handle(Matchers.any(Body.class))).thenReturn(new LinkedList<GuessResult>() {
+		Mockito.when(rh.handle(Matchers.any(Body.class))).thenReturn(new Receipt() {
 
 			{
-				add(new GuessResult() {
+				setExtracted_store_names(new LinkedList<GuessResult>() {
 
 					{
-						name = "ALDI";
-						distance = 0.5d;
+						add(new GuessResult() {
+
+							{
+								name = "ALDI";
+								distance = 0.5d;
+							}
+						});
 					}
 				});
+				setId("999");
 			}
 		});
 		_.setReceiptHandler(rh);

@@ -2,7 +2,6 @@ package com.recipitor.textextractor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -190,46 +189,25 @@ public class QueueListener {
 	 * @throws sonParseException 
 	 */
 	void handleRequestMessage(final Message msg) throws Exception {
-		LGR.debug("got a message with ID [{}] ", msg.getMessageId());
 		LGR.debug("msg is [{}]", msg.getMessageBody());
 		final Body b = mapper.readValue(msg.getMessageBody(), Body.class);
 		LGR.debug("the receipt id is [{}]", b.getReceipt().getId());
-		final List<GuessResult> lst = receiptHandler.handle(b);
-		sendResponse(b.getReceipt().getId(), lst);
-		try {
-			//			REQ.deleteMessage(msg);
-			//			history.add(msg.getMessageId());
-		} catch (final Throwable th) {
-			//			th.printStackTrace();
-			LGR.error("got error [{}]", th.getMessage());
-		}
+		final Receipt r = receiptHandler.handle(b);
+		sendResponse(r);
 	}
 
 	/**
-	 * @param lst
+	 * @param r
 	 * @throws Exception 
 	 */
-	private void sendResponse(final String id, final List<GuessResult> lst) throws Exception {
-		final com.recipitor.textextractor.data.response.Body rb = buildResponsBody(lst, id);
+	private void sendResponse(final Receipt r) throws Exception {
+		final com.recipitor.textextractor.data.response.Body rb = new com.recipitor.textextractor.data.response.Body();
+		rb.setReceipt(r);
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		mapper.writeValue(bos, rb);
 		final String m = bos.toString();
 		LGR.debug("about to post the message\n{}", m);
 		RES.sendMessage(m);
-	}
-
-	/**
-	 * @param lst
-	 * @param id
-	 * @return
-	 */
-	private com.recipitor.textextractor.data.response.Body buildResponsBody(final List<GuessResult> lst, final String id) {
-		final com.recipitor.textextractor.data.response.Body $ = new com.recipitor.textextractor.data.response.Body();
-		final Receipt r = new Receipt();
-		$.setReceipt(r);
-		r.setExtracted_store_names(lst);
-		r.setId(id);
-		return $;
 	}
 
 	/**

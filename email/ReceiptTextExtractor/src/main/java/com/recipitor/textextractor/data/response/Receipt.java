@@ -28,7 +28,7 @@ public class Receipt {
 	private static Logger LGR = LoggerFactory.getLogger(Receipt.class);
 	String id;
 	List<GuessResult> extracted_store_names = new LinkedList<GuessResult>();
-	List<String> extracted_tokens_list = new LinkedList<String>();
+	String[] extracted_tokens_list = new String[] {};
 
 	/**
 	 * @return the extracted_store_names
@@ -47,14 +47,14 @@ public class Receipt {
 	/**
 	 * @return the extracted_tokens_list
 	 */
-	public List<String> getExtracted_tokens_list() {
+	public String[] getExtracted_tokens_list() {
 		return extracted_tokens_list;
 	}
 
 	/**
 	 * @param val the extracted_tokens_list to set
 	 */
-	public void setExtracted_tokens_list(final List<String> val) {
+	public void setExtracted_tokens_list(final String[] val) {
 		extracted_tokens_list = val;
 	}
 

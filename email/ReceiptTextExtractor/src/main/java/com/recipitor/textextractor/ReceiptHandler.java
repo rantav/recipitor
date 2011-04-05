@@ -9,6 +9,7 @@
  */
 package com.recipitor.textextractor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.recipitor.textextractor.data.request.Body;
+import com.recipitor.textextractor.data.response.Receipt;
 
 /**
  * @author ymaman
@@ -51,12 +53,27 @@ public class ReceiptHandler implements IReceiptHandler {
 	 * @see com.recipitor.textextractor.IReceiptHandler#handle(com.xerox.amazonws.sqs2.Message)
 	 */
 	@Override
-	public List<GuessResult> handle(final Body b) throws Exception {
+	public Receipt handle(final Body b) throws Exception {
+		final Receipt $ = new Receipt();
 		LGR.debug("handling receipt [{}]", b.getReceipt().getId());
 		final ExtractedTokens et = ocrExtractor.extract(b);
-		final List<GuessResult> $ = brandNameGuesser.guess(et);
-		for (final GuessResult gr : $)
+		final List<GuessResult> grs = brandNameGuesser.guess(et);
+		for (final GuessResult gr : grs)
 			LGR.debug("looking for [{}] found [{}] ", gr.serachTerm, gr.foundTerm.get(0));
+		$.setExtracted_store_names(grs);
+		$.setId(b.getReceipt().getId());
+		if (!et.getTokens().isEmpty()) {
+			final String[] kns = et.getTokens().get(0).split("\\W");
+			final ArrayList<String> cleanTokens = new ArrayList<String>();
+			for (String t : kns) {
+				t = t.trim();
+				if (t.isEmpty()) continue;
+				cleanTokens.add(t);
+			}
+			final String[] ar = new String[cleanTokens.size()];
+			cleanTokens.toArray(ar);
+			$.setExtracted_tokens_list(ar);
+		}
 		return $;
 	}
 }

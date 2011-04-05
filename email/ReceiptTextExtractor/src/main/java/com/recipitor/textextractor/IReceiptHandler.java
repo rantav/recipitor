@@ -9,9 +9,8 @@
  */
 package com.recipitor.textextractor;
 
-import java.util.List;
-
 import com.recipitor.textextractor.data.request.Body;
+import com.recipitor.textextractor.data.response.Receipt;
 
 /**
  * @author ymaman
@@ -25,5 +24,5 @@ public interface IReceiptHandler {
 	 * @return 
 	 * @throws Exception 
 	 */
-	List<GuessResult> handle(Body b) throws Exception;
+	Receipt handle(Body b) throws Exception;
 }

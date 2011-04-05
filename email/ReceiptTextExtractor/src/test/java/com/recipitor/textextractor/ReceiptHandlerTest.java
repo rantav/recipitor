@@ -28,6 +28,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.recipitor.textextractor.data.request.Body;
+import com.recipitor.textextractor.data.response.Receipt;
 
 /**
  * @author ymaman
@@ -86,9 +87,9 @@ public class ReceiptHandlerTest {
 		Commons.copyStreamIntoFile(Commons.loadInputStreamFromSourceName(fn), "/tmp/img-test" + id);
 		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"id\":\"" + id
 				+ "\",\"url\":\"file:///tmp/img-test" + id + "\"}}", Body.class);
-		final List<GuessResult> $ = _.handle(b);
-		Assert.assertEquals(1, $.size());
-		Assert.assertEquals(name, $.get(0).name);
+		final Receipt $ = _.handle(b);
+		Assert.assertEquals(1, $.getExtracted_store_names().size());
+		Assert.assertEquals(name, $.getExtracted_store_names().get(0).name);
 	}
 
 	/**
@@ -118,20 +119,25 @@ public class ReceiptHandlerTest {
 		return _;
 	}
 
-	//	@Test
+	@Test
 	public void testBheaviour() throws Exception {
 		final Body b = new ObjectMapper().readValue("{\"receipt\":{\"url\":\"my_url\",\"id\":\"999\"}}", Body.class);
 		final ReceiptHandler _ = new ReceiptHandler();
 		final OCRExtractor ocre = Mockito.mock(OCRExtractor.class);
 		final ExtractedTokens et = new ExtractedTokens();
 		Mockito.when(ocre.extract(b)).thenReturn(et);
-		et.addTokens("abc\nxyz\n123");
+		et.addTokens("abc  \nxyz  \n   123   ");
 		final IBrandNameGuesser bng = Mockito.mock(IBrandNameGuesser.class);
 		final List<GuessResult> l = new LinkedList<GuessResult>();
+		final Receipt r = new Receipt();
 		Mockito.when(bng.guess(et)).thenReturn(l);
 		_.setBrandNameGuesser(bng);
 		_.setOcrExtractor(ocre);
-		Assert.assertEquals(l, _.handle(b));
+		final Receipt $ = _.handle(b);
+		final String[] expectedTokens = new String[] { "abc", "xyz", "123" };
+		Assert.assertEquals(expectedTokens.length, $.getExtracted_tokens_list().length);
+		for (int i = 0; i < expectedTokens.length; i++)
+			Assert.assertEquals(expectedTokens[i], $.getExtracted_tokens_list()[i]);
 		Mockito.verify(ocre).extract(b);
 		Mockito.verify(bng).guess(et);
 	}
