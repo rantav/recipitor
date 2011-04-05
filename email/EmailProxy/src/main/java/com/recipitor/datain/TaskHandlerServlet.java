@@ -70,6 +70,21 @@ public class TaskHandlerServlet extends HttpServlet {
 		postMailToFrontEnd(m);
 		if (LGR.isDebugEnabled()) LGR.debug("deactiving mail [" + id + "]");
 		mailDAO.deactivateMail(m.getId());
+		deleteFile(m.getFilePath());
+	}
+
+	/**
+	 * @param filePath
+	 */
+	private void deleteFile(final String filePath) {
+		LGR.debug("about to delete file [" + filePath + "]");
+		final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		final AppEngineFile file = new AppEngineFile(filePath);
+		final FileService fileService = FileServiceFactory.getFileService();
+		// Now read from the file using the Blobstore API
+		final BlobKey blobKey = fileService.getBlobKey(file);
+		blobstoreService.delete(blobKey);
+		LGR.debug("delete -- done");
 	}
 
 	/**

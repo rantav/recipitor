@@ -32,6 +32,11 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.OutputSettings;
+import com.google.appengine.api.images.Transform;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -46,6 +51,7 @@ import com.google.inject.Inject;
 public class MailService implements IMailService {
 
 	private static final String QUEUE_NAME = "post-email-queue";
+	private static final long ONE_MB = 1024 * 1024;
 	@SuppressWarnings("unused")
 	private static Logger LGR = Logger.getLogger(MailService.class);
 	private IMailExtractor mailExtractor;
@@ -109,6 +115,8 @@ public class MailService implements IMailService {
 	private void sotreAndQue(final List<Mail> ems) throws Throwable {
 		for (final Mail m : ems) {
 			LGR.debug("cp 0");
+			reduceImageSize(m);
+			LGR.debug("cp 0.5");
 			putInBlobstore(m);
 			LGR.debug("cp 1");
 			mailDAO.addMail(m);
@@ -116,6 +124,43 @@ public class MailService implements IMailService {
 			putInQueue(m);
 			LGR.debug("cp 3");
 		}
+	}
+
+	/**
+	 * @param m
+	 */
+	private void reduceImageSize(final Mail m) {
+		final byte[] oldDate = m.getAttachment().getBytes();
+		final int oldSize = oldDate.length;
+		LGR.debug("orig size is " + oldSize);
+		if (oldSize < ONE_MB) {
+			LGR.debug("less than 1MB -  no need to reduce size");
+			return;
+		}
+		final ImagesService imagesService = ImagesServiceFactory.getImagesService();
+		final Image oldImage = ImagesServiceFactory.makeImage(oldDate);
+		LGR.debug("orig dimention is " + oldImage.getWidth() + " X " + oldImage.getHeight());
+		final OutputSettings os = new OutputSettings(ImagesService.OutputEncoding.JPEG);
+		boolean fixed = false;
+		for (int i = 0; i < 5; i++) {
+			final int q = 100 - 5 * i;
+			final double ratio = Math.sqrt((double) (oldSize * (i + 1)) / ONE_MB);
+			final Transform resize = ImagesServiceFactory.makeResize((int) (oldImage.getWidth() / ratio),
+					(int) (oldImage.getHeight() / ratio));
+			LGR.debug("try with quality [" + q + "] and ratio [" + ratio + "]");
+			os.setQuality(q);
+			final Image newImage = imagesService.applyTransform(resize, oldImage, os);
+			final byte[] newImageData = newImage.getImageData();
+			final int newImageLength = newImageData.length;
+			if (newImageLength <= ONE_MB) {
+				LGR.debug("reducing size to " + newImageLength);
+				m.setSize((long) newImageData.length);
+				m.setAttachment(new Blob(newImageData));
+				fixed = true;
+				break;
+			}
+		}
+		if (!fixed) throw new RuntimeException("could not reduced image ");
 	}
 
 	/**
@@ -144,12 +189,12 @@ public class MailService implements IMailService {
 			final long dataLen = data.length;
 			FileWriteChannel writeChannel = null;
 			int pos = 0;
+			final AppEngineFile file = new AppEngineFile(fp);
+			final boolean lock = true; //hm == dataLen - pos;
+			writeChannel = fileService.openWriteChannel(file, lock);
+			LGR.debug("lock is [" + lock + "]");
 			while (pos < dataLen) {
-				final AppEngineFile file = new AppEngineFile(fp);
 				final int hm = (int) Math.min(dataLen - pos, 800000);
-				final boolean lock = hm == dataLen - pos;
-				LGR.debug("lock is [" + lock + "]");
-				writeChannel = fileService.openWriteChannel(file, lock);
 				LGR.debug("about to store " + hm + " bytes, starting from " + pos + " ");
 				final int actual = writeChannel.write(ByteBuffer.wrap(data, pos, hm));
 				LGR.debug(actual + " bytes were written actually");
